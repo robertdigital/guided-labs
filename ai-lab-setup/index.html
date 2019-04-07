@@ -34,7 +34,7 @@
 <ul class="checklist">
 <li>How to install NVIDIA drivers and CUDA on a Linux system</li>
 <li>How to install Docker and the NVIDIA Container Runtime (<strong><code>nvidia-docker</code></strong>)</li>
-<li>How to pull and run a container</li>
+<li>How to run the AI Lab container</li>
 <li>How to use the AI Lab container for your own AI projects</li>
 </ul>
 <aside class="warning"><p>This guide assumes that you have unrestricted internet connectivity as you will be downloading large files from various software repositories.</p>
@@ -72,7 +72,7 @@
     
       <google-codelab-step label="Install NVIDIA drivers and the CUDA Toolkit" duration="40">
         <p>To use your NVIDIA GPU for compute tasks like machine learning and deep learning, you will need to install the NVIDIA drivers and CUDA Toolkit.</p>
-<p>For this, please make sure that you are on a clean Ubuntu system (no existing NVIDIA drivers or libraries) and that you have sudo (root) permissions. If you&#39;re the only user, you probably do. If you&#39;re using a shared workstation or server, please approach your administrator.</p>
+<p>For this, please make sure that you are on a <strong>clean</strong> Ubuntu system (no existing NVIDIA drivers or libraries) and that you have <strong><code>sudo</code></strong> (root) permissions. If you&#39;re the only user, you probably do. If you&#39;re using a shared workstation or server, please approach your administrator.</p>
 <h2><strong>Downloading the installation package</strong></h2>
 <p>Download and install NVIDIA drivers and the CUDA Toolkit, we can head over to the NVIDIA website and download the CUDA Toolkit installer, which will install both the CUDA Toolkit, as well as the latest compatible driver.</p>
 <aside class="warning"><p>Be sure to select the <strong>correct OS (Ubuntu version)</strong> and the <strong>deb (network)</strong> file.</p>
@@ -80,9 +80,7 @@
 <p><a href="https://developer.nvidia.com/cuda-downloads?target_os=Linux&target_arch=x86_64&target_distro=Ubuntu" target="_blank"><paper-button class="colored" raised>CUDA Toolkit Download (NVIDIA)</paper-button></a></p>
 <aside class="warning"><p>Strictly speaking, we do not need to install the CUDA Toolkit if we only want to use applications in Docker containers. However, having the CUDA Toolkit gives us tools such as <a href="https://developer.nvidia.com/tools-overview" target="_blank">Nsight</a> which can help us profile our applications in the Docker container.</p>
 </aside>
-<aside class="special"><p>The CUDA Toolkit will not be compatible with every version of the driver, hence we install them from the same package to ensure compatibility. This is a good practice to keep to in the future to avoid problems.</p>
-</aside>
-<h2><strong>Install CUDA and the NVIDIA driver</strong></h2>
+<h2><br><strong>Install CUDA and the NVIDIA driver</strong></h2>
 <h3><strong>Open a New Terminal</strong></h3>
 <p>You&#39;ll need to open a new Terminal window:</p>
 <ol type="1" start="1">
@@ -90,7 +88,8 @@
 <li>Type in the following commands (each command is one line)</li>
 <li>You should not get an error at any stage. If so, stop and Google the error.</li>
 </ol>
-<pre># navigate to your Downloads folder. Usually, this can be done with:
+<pre># &lt;- denotes this line is a comment
+# navigate to your Downloads folder. Usually, this can be done with:
 cd ~/Downloads
 
 # install the CUDA network repository
@@ -102,15 +101,22 @@ sudo apt-get update
 
 # install the CUDA toolkit and NVIDIA drivers
 sudo apt-get install cuda</pre>
-<aside class="special"><p><code>#</code> before the line denotes that line is a comment, and will not be executed</p>
+<aside class="special"><p>The CUDA Toolkit will not be compatible with every version of the driver, hence we install them from the same package to ensure compatibility. This is a good practice to keep to in the future to avoid problems.</p>
 </aside>
 <p>The installation will take some time to complete (around 30 minutes on a Broadband internet connection).</p>
 <p><strong>Please reboot your system before proceeding to the next step.</strong></p>
-<h2><strong>Verifying the NVIDIA driver has been installed</strong></h2>
-<h3>Running <strong><code>nvidia-smi</code></strong></h3>
-<p>Open a new Terminal and type nvidia-smi. It should produce an output similar to the one below:</p>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Verifying the NVIDIA driver has been installed" duration="0">
+        <p>If the installation has succeeded, the all-important <strong><code>nvidia-smi</code></strong> tool will also have been installed. <strong><code>nvidia-smi</code></strong> will allow you to check the current status of the GPUs in your system.</p>
+<h2>Running <strong><code>nvidia-smi</code></strong></h2>
+<p>Open a new Terminal and type <strong><code>nvidia-sm</code></strong>i. It should produce an output similar to the one below:</p>
 <p>(placeholder)</p>
 <p>If you see that, congratulations! The NVIDIA drivers and CUDA Toolkit have been installed successfully.</p>
+<p>Here&#39;s how to interpret the nvidia-smi output:</p>
+<p>(placeholder)</p>
 <h2 class="checklist"><strong>What we&#39;ve covered</strong></h2>
 <ul class="checklist">
 <li>How to install NVIDIA drivers and CUDA on a Linux system</li>
@@ -119,10 +125,10 @@ sudo apt-get install cuda</pre>
 
       </google-codelab-step>
     
-      <google-codelab-step label="Install Docker and the NVIDIA Container Runtime" duration="10">
+      <google-codelab-step label="Install Docker" duration="40">
         <p>To standardise and simplify the process of running the various machine learning and deep learning frameworks, the industry has largely turned to using containers. In this step, you will be installing the commonly used Docker runtime for running containers.</p>
 <h2><strong>Downloading and installing Docker</strong></h2>
-<p>In this step, you will be adding the Docker repository to Ubuntu and install Docker from there. Again, please take note every command is one line.</p>
+<p>In this step, you will be adding the Docker repository to Ubuntu and install Docker from there. Open a new Terminal and execute the following commands. Again, please take note every command is one line.</p>
 <pre>sudo apt-get install -y apt-transport-https ca-certificates curl software-properties-common
 
 curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
@@ -142,8 +148,42 @@ sudo apt-get install docker-ce docker-ce-cli containerd.io</pre>
 <p>Since the container image hello-world does not yet exist on our system, Docker will pull the image before running it. You will see the following output:</p>
 <p>(placeholder)</p>
 <p>Congratulations! Now we have a working container runtime.</p>
-<h2><strong>Downloading and installing the NVIDIA Container Runtime</strong></h2>
-<p>In this step, we will install the NVIDIA Container Runtime (also known as <strong><code>nvidia-docker</code></strong>) in order to allow </p>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Install the NVIDIA Container Runtime" duration="0">
+        <p>In this step, we will install the NVIDIA Container Runtime (also known as <strong><code>nvidia-docker</code></strong>) in order to allow Docker containers to access the GPU. This is required for the applications running in the AI Lab container, such as TensorFlow, PyTorch and RAPIDS, to use the GPU to speed up computations. </p>
+<p>The benefit of using nvidia-docker is that </p>
+<h2>Downloading and installing <strong><code>nvidia-docker</code></strong></h2>
+<p>In this step, you will be downloading and installing the NVIDIA Container Runtime. Please run the following commands in Terminal, and again note that every command is one line.</p>
+<pre># adding the repository
+
+curl -s -L https://nvidia.github.io/nvidia-docker/gpgkey | sudo apt-key add -
+
+distribution=$(. /etc/os-release;echo $ID$VERSION_ID)
+
+curl -s -L https://nvidia.github.io/nvidia-docker/$distribution/nvidia-docker.list | sudo tee /etc/apt/sources.list.d/nvidia-docker.list
+
+sudo apt-get update
+
+# install nvidia-docker
+sudo apt-get install nvidia-docker2
+
+# restart the docker daemon
+sudo pkill -SIGHUP dockerd</pre>
+<h2>Verifying <code>nvidia-docker</code><strong> is installed correctly</strong></h2>
+<p>To verify that <strong><code>nvidia-docker</code></strong> is installed correctly, you can run the following command to execute <strong><code>nvidia-smi</code></strong> <strong>inside</strong> a docker container.</p>
+<pre>nvidia-docker run --rm nvidia/cuda nvidia-smi
+
+# this also works, and is functionally equivalent:
+docker run --runtime=nvidia --rm nvidia/cuda nvidia-smi</pre>
+<p>If you see the <strong><code>nvidia-smi</code></strong> output, then your installation is working.</p>
+<h2 class="checklist"><strong>What we&#39;ve covered</strong></h2>
+<ul class="checklist">
+<li>How to install NVIDIA drivers and CUDA on a Linux system</li>
+<li>How to install Docker and the NVIDIA Container Runtime (<strong><code>nvidia-docker</code></strong>)</li>
+</ul>
 
 
       </google-codelab-step>
