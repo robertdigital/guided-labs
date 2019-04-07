@@ -28,6 +28,7 @@
       <google-codelab-step label="Introduction" duration="5">
         <p><img style="width: 624.00px" src="img/482aa78137101620.png"></p>
 <p>The <strong>AI Lab</strong> container has been painstakingly tailored to provide you with the best out-of-the-box experience to use various AI frameworks. These include the various Python data-science, machine learning, and deep learning frameworks. Where possible, the libraries are GPU-accelerated and optimised for performance.</p>
+<p>The <strong>AI Lab</strong> container has been engineered such all functionality can be used via a web browser on the same machine, or on a remote machine (e.g. server) with no client-side installation required, other than having a web browser. </p>
 <p>To find out more, head over to the <a href="https://github.com/NVAITC/ai-lab/blob/master/README.md" target="_blank">GitHub repository</a> where you will find more detailed information about <strong>AI Lab</strong>.</p>
 <p>In this guide, you will learn how to set-up your own personal AI development environment. You will configure your Linux workstation or server to use with <strong>AI Lab</strong> to swiftly get started with a wide range of AI projects without worrying about installing and configuring the various libraries.</p>
 <h2 class="checklist"><strong>What you&#39;ll learn</strong></h2>
@@ -43,6 +44,19 @@
 
       </google-codelab-step>
     
+      <google-codelab-step label="Key Concepts" duration="10">
+        <p>This section touches on two important pieces of software you will need to be familiar with to use the AI Lab container: Docker, and Jupyter notebook.</p>
+<h2><strong>What is a Docker container?</strong></h2>
+<p>To standardise and simplify the process of running the various software frameworks across many different environments, the industry has largely turned to using containers. This largely gets rid of the &#34;it works on my machine!&#34; problem.</p>
+<p>(to do...)</p>
+<p>Learn more: ...</p>
+<h2><strong>What is Jupyter notebook?</strong></h2>
+<p>(to do...)</p>
+<p>Learn more: <a href="https://www.nature.com/articles/d41586-018-07196-1" target="_blank">Why data scientists love Jupyter</a>, and some <a href="https://www.datacamp.com/community/blog/jupyter-notebook-cheat-sheet" target="_blank">tips and tricks to make the best out of it</a>!</p>
+
+
+      </google-codelab-step>
+    
       <google-codelab-step label="Verifying your System Setup" duration="5">
         <h2><strong>Important System Requirements</strong></h2>
 <p>It is very important that you verify that you meet the following system requirements:</p>
@@ -53,7 +67,7 @@
 <li>NVIDIA Maxwell, Pascal, Volta or Turing GPU</li>
 <li>If you have a GTX 9-series or newer GPU, you&#39;re fine</li>
 </ul>
-<p>If you meet the above requirements, you are free to skip past the next section, to &#34;Before we continue&#34;. Else, keep on reading.</p>
+<p>If you meet the above requirements, you are free to skip to <strong>Step 7</strong>. Else, keep on reading.</p>
 <aside class="warning"><p><strong>Installing Ubuntu is beyond the scope of this guide.</strong> If you require guidance to install Ubuntu on your computer, please take a look at the <a href="https://tutorials.ubuntu.com/tutorial/tutorial-install-ubuntu-desktop?_ga=2.45293924.1169577482.1554652081-1967565470.1554472112#0" target="_blank">official tutorial</a> or <a href="https://help.ubuntu.com/lts/installation-guide/amd64/index.html" target="_blank">detailed install guide</a>.</p>
 </aside>
 <aside class="warning"><p><strong>There&#39;s the right way to do things, and also the left way.</strong> If you&#39;re not new to Linux and you don&#39;t mind risking a bit of downtime due to a blotched installation, give the following &#34;shortcut&#34; a try:</p>
@@ -64,7 +78,7 @@
 </ol>
 <p><strong>Your system will reboot automatically when completed.</strong></p>
 <p>For more information, visit <a href="https://getcuda.ml/" target="_blank">getcuda.ml</a> .</p>
-<p>This install works <em>most</em> of the time (in my experience, it actually worked for all but one case, and I&#39;ve done dozens of system setups) and leave your system in the correct state for you to jump straight to step X.</p>
+<p>This install works <em>most</em> of the time (in my experience, it actually worked for all but one case, and I&#39;ve done dozens of system setups) and leave your system in the correct state for you to jump straight to <strong>Step 7</strong>.</p>
 </aside>
 
 
@@ -109,7 +123,7 @@ sudo apt-get install cuda</pre>
 
       </google-codelab-step>
     
-      <google-codelab-step label="Verifying the NVIDIA driver has been installed" duration="0">
+      <google-codelab-step label="Verifying the NVIDIA driver has been installed" duration="5">
         <p>If the installation has succeeded, the all-important <strong><code>nvidia-smi</code></strong> tool will also have been installed. <strong><code>nvidia-smi</code></strong> will allow you to check the current status of the GPUs in your system.</p>
 <h2>Running <strong><code>nvidia-smi</code></strong></h2>
 <p>Open a new Terminal and type <strong><code>nvidia-sm</code></strong>i. It should produce an output similar to the one below:</p>
@@ -125,8 +139,8 @@ sudo apt-get install cuda</pre>
 
       </google-codelab-step>
     
-      <google-codelab-step label="Install Docker" duration="40">
-        <p>To standardise and simplify the process of running the various machine learning and deep learning frameworks, the industry has largely turned to using containers. In this step, you will be installing the commonly used Docker runtime for running containers.</p>
+      <google-codelab-step label="Install Docker" duration="5">
+        <p>In this step, you will be installing the commonly used Docker runtime for running containers.</p>
 <h2><strong>Downloading and installing Docker</strong></h2>
 <p>In this step, you will be adding the Docker repository to Ubuntu and install Docker from there. Open a new Terminal and execute the following commands. Again, please take note every command is one line.</p>
 <pre>sudo apt-get install -y apt-transport-https ca-certificates curl software-properties-common
@@ -152,9 +166,11 @@ sudo apt-get install docker-ce docker-ce-cli containerd.io</pre>
 
       </google-codelab-step>
     
-      <google-codelab-step label="Install the NVIDIA Container Runtime" duration="0">
+      <google-codelab-step label="Install the NVIDIA Container Runtime" duration="10">
         <p>In this step, we will install the NVIDIA Container Runtime (also known as <strong><code>nvidia-docker</code></strong>) in order to allow Docker containers to access the GPU. This is required for the applications running in the AI Lab container, such as TensorFlow, PyTorch and RAPIDS, to use the GPU to speed up computations. </p>
-<p>The benefit of using nvidia-docker is that </p>
+<p>The benefit of using nvidia-docker is that we can run various CUDA applications and frameworks on a wide range of systems without needing to configure the host system for our own application. For example, OpenPose recommends CUDA 8.0, and if the host system has a different version of CUDA, the application is unlikely to work. With <strong><code>nvidia-docker</code></strong>, as long as our host system has CUDA 8.0 <strong>or newer</strong>, the application will work.</p>
+<aside class="warning"><p>If the application in the container requires a certain version of the CUDA toolkit, the application will work unless your machine&#39;s driver version is too old to support that version of the CUDA toolkit.</p>
+</aside>
 <h2>Downloading and installing <strong><code>nvidia-docker</code></strong></h2>
 <p>In this step, you will be downloading and installing the NVIDIA Container Runtime. Please run the following commands in Terminal, and again note that every command is one line.</p>
 <pre># adding the repository
@@ -184,6 +200,126 @@ docker run --runtime=nvidia --rm nvidia/cuda nvidia-smi</pre>
 <li>How to install NVIDIA drivers and CUDA on a Linux system</li>
 <li>How to install Docker and the NVIDIA Container Runtime (<strong><code>nvidia-docker</code></strong>)</li>
 </ul>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Running the AI Lab Container (GUI)" duration="10">
+        <p>The AI Lab container has pre-installed a large variety of commonly used libraries and frameworks. These include:</p>
+<ul>
+<li>CUDA 10.0 + cuDNN 7.5</li>
+<li>Deep Learning: TensorFlow, PyTorch, fast.ai, Keras, Autokeras</li>
+<li>Machine Learning: scikit-learn, XGBoost, lightgbm</li>
+<li>RAPIDS: cuDF, cuML, cuGraph</li>
+<li>CV &amp; NLP: opencv-contrib-python, nltk, spacy, flair</li>
+<li>Distributed: OpenMPI, Horovod, Dask</li>
+<li>Jupyter Notebook and JupyterLab</li>
+<li>Useful Jupyter extensions + integrated TensorBoard support</li>
+<li>VNC edition with full desktop environment and various RL libraries</li>
+</ul>
+<p>All these functionalities can be access through a web browser.</p>
+<h2><strong>Installing the AI Lab GUI</strong></h2>
+<p><strong>AI Lab GUI</strong> is a simple Python application that runs on your workstation or server. It allows you to easily start, stop, and launch Jupyter notebook via a simple web interface. This means that you can use the container without needing to manually type in docker commands. You can also use it remotely to manage the container if you do not have SSH access to your system.</p>
+<p>Installing and using the <strong>AI Lab GUI</strong> is recommended for beginners who may not be experience with docker or the command line interface.</p>
+<p>If you&#39;ve come to this guide from the Web Dashboard, then you&#39;ve already installed the <strong>AI Lab GUI</strong> package. If not, you are encouraged to install the <strong>AI Lab GUI</strong> package:</p>
+<pre># Python 3 is needed to run the AI Lab GUI app
+sudo apt install python3 python3-pip
+
+pip install ai_lab_gui</pre>
+<h2><strong>Using the AI Lab GUI</strong></h2>
+<p>Running <strong>AI Lab GUI</strong> is simple:</p>
+<pre>ai_lab_gui</pre>
+<p>By running the above command on your system, the Web Dashboard will start on port <strong><code>5050</code></strong> and open in a browser. </p>
+<p><img style="width: 624.00px" src="img/f2b4208457a55394.png"></p>
+<p>If you&#39;re running the command on a remote server, find out what is the IP address of the server and navigate to <strong><code>ip-address:5050</code></strong> in your web browser to see the Web Dashboard.</p>
+<p>Here&#39;s a breakdown of the Web Dashboard</p>
+<p>(placeholder)</p>
+<p>To run the AI Lab container with default settings, just click &#34;Launch Container&#34;.</p>
+<p>In the bottom panel, you can view the output of the container, as well as the command to launch the container in the command line. </p>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Running the AI Lab Container (Docker CLI)" duration="10">
+        <p>Using the <strong>AI Lab GUI</strong> is convenient, but it is important to also learn the basics of launching containers from the command line using the <strong><code>docker</code></strong> command line interface (CLI).</p>
+<h2><strong>Basic Commands</strong></h2>
+<p>Pulling a container:</p>
+<pre>docker pull nvaitc/ai-lab:latest</pre>
+<p>Running an interactive shell inside the container:</p>
+<pre>nvidia-docker run --rm -it nvaitc/ai-lab bash</pre>
+<p>Run <strong>Jupyter Notebook</strong> with the following options:</p>
+<ul>
+<li>forward port <strong><code>8888</code></strong> to your host machine</li>
+<li><strong><code>mount /home/$USER/work</code></strong> as the working directory</li>
+</ul>
+<pre>nvidia-docker run --rm \
+ -p 8888:8888 \
+ -v /home/$USER/work:/home/jovyan \
+ nvaitc/ai-lab</pre>
+<aside class="special"><p><strong>Important Note</strong></p>
+<p>The backslash, <strong><code>\</code></strong> , &#34;escapes&#34; the line break at the end of every line</p>
+<p>Hence, we can type in <strong>multi-line commands</strong> that effectively <strong>execute as a single line</strong>.</p>
+<p>Sometimes, we do this to make complicated commands look neater.</p>
+</aside>
+<p>For detailed instructions on how to use AI Lab via the docker CLI, please head over to the <a href="https://github.com/NVAITC/ai-lab/blob/master/INSTRUCTIONS.md" target="_blank">Instructions page</a> on the GitHub repository.</p>
+<h2 class="checklist"><strong>What we&#39;ve covered</strong></h2>
+<ul class="checklist">
+<li>How to install NVIDIA drivers and CUDA on a Linux system</li>
+<li>How to install Docker and the NVIDIA Container Runtime (<strong><code>nvidia-docker</code></strong>)</li>
+<li>How to run the AI Lab container</li>
+</ul>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Running the MNIST example in AI Lab" duration="15">
+        <p>The MNIST task is the &#34;Hello World&#34; of the machine learning work. The tasks resolves around using machine learning to <strong>classify handwritten digits</strong> (0, 1, 2 and so on, up to 9). We will be using the popular Keras (in the form of <strong><code>tensorflow.keras</code></strong>) framework to perform this task.</p>
+<aside class="special"><p><strong>Important Note</strong></p>
+<p>There are effectively two implementations of Keras, which is actually just an API specification. </p>
+<p>There is the original <a href="https://keras.io/" target="_blank">Keras library</a>, which can operate on top of various deep learning frameworks (&#34;backends&#34;) including TensorFlow, MXNet and CNTK.</p>
+<p>For this tutorial, we will use the <strong>TensorFlow</strong> built in implementation of Keras (<a href="https://www.tensorflow.org/guide/keras" target="_blank">tf.keras</a>).</p>
+</aside>
+<p>(placeholder)</p>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Running the Oxford102 example in AI Lab" duration="40">
+        <h2><strong>Downloading the Dataset</strong></h2>
+<p>(placeholder)</p>
+<h2><strong>Mounting the project folder into the AI Lab container</strong></h2>
+<p>(placeholder)</p>
+<h2><strong>Running the Training Job on a single GPU</strong></h2>
+<p>(placeholder)</p>
+<aside class="warning"><p>If you are using a shared server with multiple GPU, you do not want to accidentally use multiple GPUs. TensorFlow, for example, has a tendency to occupy the GPU memory of all the available GPUs on a given system. To avoid that, we can set <strong>at the very top of the notebook</strong>, in the first code cell to be executed:</p>
+<p><code>import os</code></p>
+<p><code>os.environ[&#34;CUDA_DEVICE_ORDER&#34;] = &#34;PCI_BUS_ID&#34;</code></p>
+<p><code># set the desired GPU ID as seen in nvidia-smi</code></p>
+<p><code>os.environ[&#34;CUDA_VISIBLE_DEVICES&#34;] = &#34;0&#34; # first GPU on the system</code></p>
+</aside>
+<p>(placeholder)</p>
+<aside class="special"><p><strong>Important Note</strong></p>
+<p>In this example, we are using transfer learning, a technique to retrain a neural network without needing to train it from scratch, or even training all the layers. This is a common technique used for convolutional neural networks (CNN) in image classification and other related tasks.</p>
+</aside>
+<p>(placeholder)</p>
+<h2><strong>Running the Training Job on multiple GPUs</strong></h2>
+<p>If your system does not have multiple GPUs, you can skip pass this step.</p>
+<p>(placeholder)</p>
+<p>(placeholder)</p>
+<h2 class="checklist"><strong>What we&#39;ve covered</strong></h2>
+<ul class="checklist">
+<li>How to install NVIDIA drivers and CUDA on a Linux system</li>
+<li>How to install Docker and the NVIDIA Container Runtime (<strong><code>nvidia-docker</code></strong>)</li>
+<li>How to run the AI Lab container</li>
+<li>How to use the AI Lab container for your own AI projects</li>
+</ul>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Next Steps" duration="0">
+        <p>Congratulations! You have reached the end of this guide.</p>
+<p>Do head over to the <a href="https://github.com/NVAITC/ai-lab" target="_blank">GitHub repository</a> to learn more about the AI Lab container.</p>
 
 
       </google-codelab-step>
