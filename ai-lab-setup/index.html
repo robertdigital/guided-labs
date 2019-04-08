@@ -9,7 +9,7 @@
   <title>AI Lab Guided Setup</title>
   <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Source+Code+Pro:400|Roboto:400,300,400italic,500,700|Roboto+Mono">
   <link rel="stylesheet" href="//fonts.googleapis.com/icon?family=Material+Icons">
-  <link rel="stylesheet" href="https://storage.googleapis.com/codelab-elements/codelab-elements.css">
+  <link rel="stylesheet" href="../codelab-elements.css">
   <style>
     .success {
       color: #1e8e3e;
@@ -26,7 +26,9 @@
                   feedback-link="https://github.com/NVAITC/guided-labs/issues">
     
       <google-codelab-step label="Introduction" duration="5">
-        <p><img style="width: 624.00px" src="img/482aa78137101620.png"></p>
+        <aside class="warning"><p><strong>This guide is still a work in progress!</strong></p>
+</aside>
+<p><img style="width: 688.35px" src="img/482aa78137101620.png"></p>
 <p>The <strong>AI Lab</strong> container has been painstakingly tailored to provide you with the best out-of-the-box experience to use various AI frameworks. These include the various Python data-science, machine learning, and deep learning frameworks. Where possible, the libraries are GPU-accelerated and optimised for performance.</p>
 <p>The <strong>AI Lab</strong> container has been engineered such all functionality can be used via a web browser on the same machine, or on a remote machine (e.g. server) with no client-side installation required, other than having a web browser. </p>
 <p>To find out more, head over to the <a href="https://github.com/NVAITC/ai-lab/blob/master/README.md" target="_blank">GitHub repository</a> where you will find more detailed information about <strong>AI Lab</strong>.</p>
@@ -45,14 +47,21 @@
       </google-codelab-step>
     
       <google-codelab-step label="Key Concepts" duration="10">
-        <p>This section touches on two important pieces of software you will need to be familiar with to use the AI Lab container: Docker, and Jupyter notebook.</p>
+        <p>This section touches on two important pieces of software you will need to be familiar with to use the AI Lab container effectively: Docker, and Jupyter notebook.</p>
 <h2><strong>What is a Docker container?</strong></h2>
-<p>To standardise and simplify the process of running the various software frameworks across many different environments, the industry has largely turned to using containers. This largely gets rid of the &#34;it works on my machine!&#34; problem.</p>
-<p>(to do...)</p>
-<p>Learn more: ...</p>
+<p>To standardise and simplify the process of running the various software frameworks across many different environments, the industry has largely turned to using containers. This largely solves the &#34;<em>it works on my machine!</em>&#34; problem, where an application runs on one computer but not another due to various dependency issues.</p>
+<p>You might have heard of virtual machines. Virtual machines take up a lot of resources and are slow because they have a lot of overhead in running multiple full versions of the operating system (OS). A container can be thought of as a very lightweight and efficient form of a virtual machine that uses the host OS kernel instead. </p>
+<p><img style="width: 624.00px" src="img/59e86b6b79322849.png"></p>
+<p>Docker containers are a type of container runtime that is designed for application containers. This means that Docker images contain a snapshot of a application already configured and installed, and launching a new Docker container from that image allows you to run that application immediately without worrying about installation procedures or configuration.</p>
+<p>The NVIDIA Container Runtime (<strong><code>nvidia-docker</code></strong>) provides containers a way to access the NVIDIA GPUs on a workstation or server.</p>
+<aside class="special"><p>Learn more about Docker at the <a href="https://docs.docker.com/get-started/" target="_blank">Official Docker Get Started Guide</a>.</p>
+</aside>
 <h2><strong>What is Jupyter notebook?</strong></h2>
-<p>(to do...)</p>
-<p>Learn more: <a href="https://www.nature.com/articles/d41586-018-07196-1" target="_blank">Why data scientists love Jupyter</a>, and some <a href="https://www.datacamp.com/community/blog/jupyter-notebook-cheat-sheet" target="_blank">tips and tricks to make the best out of it</a>!</p>
+<p>Jupyter Notebook (and the newer JupyterLab) provide <strong>interactive computing environments</strong> (also known as &#34;notebooks&#34;)in a web-based interface. It is similar in some ways to tools such as Wolfram Mathematica.</p>
+<p>Jupyter notebooks embody the idea of a <strong>computational narrative</strong>, where narrative text, code, results, images, and even interactive widgets are all part of the same document. </p>
+<p><img style="width: 624.00px" src="img/dea569844508de9.png"></p>
+<aside class="special"><p>Learn more about <a href="https://www.nature.com/articles/d41586-018-07196-1" target="_blank">why data scientists love Jupyter</a>, and some <a href="https://www.datacamp.com/community/blog/jupyter-notebook-cheat-sheet" target="_blank">tips and tricks to make the best out of it</a>! Also head over to the <a href="https://jupyter.org/" target="_blank">official website</a>.</p>
+</aside>
 
 
       </google-codelab-step>
@@ -67,7 +76,7 @@
 <li>NVIDIA Maxwell, Pascal, Volta or Turing GPU</li>
 <li>If you have a GTX 9-series or newer GPU, you&#39;re fine</li>
 </ul>
-<p>If you meet the above requirements, you are free to skip to <strong>Step 7</strong>. Else, keep on reading.</p>
+<p>If you meet the above requirements (e.g. you are using a NVIDIA <a href="https://www.nvidia.com/en-sg/data-center/dgx-systems/" target="_blank">DGX</a> system), you are free to skip to <strong>Step 7</strong>. Else, keep on reading.</p>
 <aside class="warning"><p><strong>Installing Ubuntu is beyond the scope of this guide.</strong> If you require guidance to install Ubuntu on your computer, please take a look at the <a href="https://tutorials.ubuntu.com/tutorial/tutorial-install-ubuntu-desktop?_ga=2.45293924.1169577482.1554652081-1967565470.1554472112#0" target="_blank">official tutorial</a> or <a href="https://help.ubuntu.com/lts/installation-guide/amd64/index.html" target="_blank">detailed install guide</a>.</p>
 </aside>
 <aside class="warning"><p><strong>There&#39;s the right way to do things, and also the left way.</strong> If you&#39;re not new to Linux and you don&#39;t mind risking a bit of downtime due to a blotched installation, give the following &#34;shortcut&#34; a try:</p>
@@ -127,10 +136,13 @@ sudo apt-get install cuda</pre>
         <p>If the installation has succeeded, the all-important <strong><code>nvidia-smi</code></strong> tool will also have been installed. <strong><code>nvidia-smi</code></strong> will allow you to check the current status of the GPUs in your system.</p>
 <h2>Running <strong><code>nvidia-smi</code></strong></h2>
 <p>Open a new Terminal and type <strong><code>nvidia-sm</code></strong>i. It should produce an output similar to the one below:</p>
-<p>(placeholder)</p>
+<p><img style="width: 624.00px" src="img/3864a64025d9ad0d.png"></p>
 <p>If you see that, congratulations! The NVIDIA drivers and CUDA Toolkit have been installed successfully.</p>
-<p>Here&#39;s how to interpret the nvidia-smi output:</p>
-<p>(placeholder)</p>
+<p>If you have multiple GPUs on your system, you can run <strong><code>nvidia-smi topo -m</code></strong> to see how the GPUs are interconnected. This will affect which GPUs you may want to choose to run a multi-GPU training job.</p>
+<p><img style="width: 624.00px" src="img/7a3307492f298515.png"></p>
+<p>For example, in the above output (DGX Station), <strong><code>GPU0</code></strong> and <strong><code>GPU3</code></strong> are connected by <strong>two</strong> bonded NVLink connections, while <strong><code>GPU0</code></strong> and <strong><code>GPU1</code></strong> are connected by <strong>one</strong> NVLink connection. This means that <strong><code>GPU0</code></strong> and <strong><code>GPU3</code></strong> can communicate at a higher bandwidth than possible between <strong><code>GPU0</code></strong> and <strong><code>GPU1</code></strong> .</p>
+<aside class="special"><p>The <strong><code>nvidia-smi</code></strong> tool is very powerful and important for investigating GPU-related issues. You can learn more about the tool on <a href="https://www.microway.com/hpc-tech-tips/nvidia-smi_control-your-gpus/" target="_blank">this website</a>.</p>
+</aside>
 <h2 class="checklist"><strong>What we&#39;ve covered</strong></h2>
 <ul class="checklist">
 <li>How to install NVIDIA drivers and CUDA on a Linux system</li>
@@ -159,8 +171,8 @@ sudo apt-get install docker-ce docker-ce-cli containerd.io</pre>
 <h2><strong>Verifying your Docker installation</strong></h2>
 <p>To verify that Docker has been installed correctly, we will be running the hello-world container with the following command:</p>
 <pre>docker run hello-world</pre>
-<p>Since the container image hello-world does not yet exist on our system, Docker will pull the image before running it. You will see the following output:</p>
-<p>(placeholder)</p>
+<p>Since the container image <strong><code>hello-world</code></strong> does not yet exist on our system, Docker will <strong>pull</strong> the image from the <a href="https://hub.docker.com/" target="_blank">Docker Hub</a> before running it. You will see the following output:</p>
+<p><img style="width: 624.00px" src="img/e123ade973fcc9eb.png"></p>
 <p>Congratulations! Now we have a working container runtime.</p>
 
 
@@ -194,7 +206,11 @@ sudo pkill -SIGHUP dockerd</pre>
 
 # this also works, and is functionally equivalent:
 docker run --runtime=nvidia --rm nvidia/cuda nvidia-smi</pre>
-<p>If you see the <strong><code>nvidia-smi</code></strong> output, then your installation is working.</p>
+<p>Since you probably don&#39;t have the <a href="https://hub.docker.com/r/nvidia/cuda/" target="_blank"><strong><code>nvidia/cuda</code></strong></a> image on your system, Docker will go ahead and pull it from the Docker Hub before running it.</p>
+<p>If you see the <strong><code>nvidia-smi</code></strong> output, then your installation is working:</p>
+<p><img style="width: 624.00px" src="img/ea141ca2c79cf244.png"></p>
+<aside class="special"><p>Notice how, in contrast to when running <strong><code>nvidia-smi</code></strong> on the host system, no processes show up. This is because <strong><code>nvidia-smi</code></strong> is running inside the container, which is isolated and has tightly controlled visibility of the host system. This is what we call container isolation.</p>
+</aside>
 <h2 class="checklist"><strong>What we&#39;ve covered</strong></h2>
 <ul class="checklist">
 <li>How to install NVIDIA drivers and CUDA on a Linux system</li>
@@ -207,7 +223,6 @@ docker run --runtime=nvidia --rm nvidia/cuda nvidia-smi</pre>
       <google-codelab-step label="Running the AI Lab Container (GUI)" duration="10">
         <p>The AI Lab container has pre-installed a large variety of commonly used libraries and frameworks. These include:</p>
 <ul>
-<li>CUDA 10.0 + cuDNN 7.5</li>
 <li>Deep Learning: TensorFlow, PyTorch, fast.ai, Keras, Autokeras</li>
 <li>Machine Learning: scikit-learn, XGBoost, lightgbm</li>
 <li>RAPIDS: cuDF, cuML, cuGraph</li>
@@ -220,7 +235,7 @@ docker run --runtime=nvidia --rm nvidia/cuda nvidia-smi</pre>
 <p>All these functionalities can be access through a web browser.</p>
 <h2><strong>Installing the AI Lab GUI</strong></h2>
 <p><strong>AI Lab GUI</strong> is a simple Python application that runs on your workstation or server. It allows you to easily start, stop, and launch Jupyter notebook via a simple web interface. This means that you can use the container without needing to manually type in docker commands. You can also use it remotely to manage the container if you do not have SSH access to your system.</p>
-<p>Installing and using the <strong>AI Lab GUI</strong> is recommended for beginners who may not be experience with docker or the command line interface.</p>
+<p>Installing and using the <strong>AI Lab GUI</strong> is recommended for beginners who may not be experienced with docker or the command line interface.</p>
 <p>If you&#39;ve come to this guide from the Web Dashboard, then you&#39;ve already installed the <strong>AI Lab GUI</strong> package. If not, you are encouraged to install the <strong>AI Lab GUI</strong> package:</p>
 <pre># Python 3 is needed to run the AI Lab GUI app
 sudo apt install python3 python3-pip
