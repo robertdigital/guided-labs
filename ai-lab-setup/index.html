@@ -28,11 +28,11 @@
       <google-codelab-step label="Introduction" duration="5">
         <aside class="warning"><p><strong>This guide is still a work in progress!</strong></p>
 </aside>
-<p><img style="width: 726.17px" src="img/ebc49c4b68f469dd.png"></p>
+<p><img style="width: 729.50px" src="img/bf16c84252f482db.png"></p>
 <p>The <strong>AI Lab</strong> container has been painstakingly tailored to provide you with the best out-of-the-box experience to use various AI frameworks. These include the various Python data-science, machine learning, and deep learning frameworks. Where possible, the libraries are GPU-accelerated and optimised for performance.</p>
-<p>The <strong>AI Lab</strong> container has been engineered such all functionality can be used via a web browser on the same machine, or on a remote machine (e.g. server) with no client-side installation required, other than having a web browser. </p>
-<p>To find out more, head over to the <a href="https://github.com/NVAITC/ai-lab/blob/master/README.md" target="_blank"><strong>GitHub repository</strong></a> where you will find more detailed information about <strong>AI Lab</strong>.</p>
-<p>In this guide, you will learn how to set-up your own personal AI development environment. You will configure your Linux workstation or server to use with <strong>AI Lab</strong> (as well as <a href="https://www.nvidia.com/en-sg/gpu-cloud/" target="_blank"><strong>NGC containers</strong></a>)to swiftly get started with a wide range of AI projects without worrying about installing and configuring the various libraries.</p>
+<p>The AI Lab container has been engineered such all functionality can be used via a web browser on the same machine, or on a remote machine (e.g. server) with no client-side installation required, other than having a web browser. </p>
+<p>To find out more, head over to the <a href="https://github.com/NVAITC/ai-lab/blob/master/README.md" target="_blank"><strong>GitHub repository</strong></a> where you will find more detailed information about AI Lab.</p>
+<p>In this guide, you will learn how to set-up your own personal AI development environment. You will configure your Linux workstation or server to use with AI Lab (as well as <a href="https://www.nvidia.com/en-sg/gpu-cloud/" target="_blank"><strong>NGC containers</strong></a>) to swiftly get started with a wide range of AI projects without worrying about installing and configuring the various libraries.</p>
 <aside class="special"><p><strong>NGC (NVIDIA GPU CLOUD)</strong> containers are officially validated containers provided by NVIDIA to provide maximum performance stability in production use-cases. In contrast, <strong>AI Lab</strong> is not an official NVIDIA product, but is designed to be extremely user friendly.</p>
 </aside>
 <h2 class="checklist"><strong>What you&#39;ll learn</strong></h2>
@@ -49,7 +49,7 @@
       </google-codelab-step>
     
       <google-codelab-step label="Key Concepts" duration="10">
-        <p>This section touches on two important pieces of software you will need to be familiar with to use the AI Lab container effectively: Docker, and Jupyter notebook.</p>
+        <p>This section touches on two important pieces of software you will need to be familiar with to use the AI Lab container effectively: <strong>Docker</strong>, and <strong>Jupyter Notebook</strong>.</p>
 <h2><strong>What is a Docker container?</strong></h2>
 <p>To standardise and simplify the process of running the various software frameworks across many different environments, the industry has largely turned to using containers. This largely solves the &#34;<em>it works on my machine!</em>&#34; problem, where an application runs on one computer but not another due to various dependency issues.</p>
 <p>You might have heard of virtual machines. Virtual machines take up a lot of resources and are slow because they have a lot of overhead in running multiple full versions of the operating system (OS). A container can be thought of as a very lightweight and efficient form of a virtual machine that uses the host OS kernel instead. </p>
@@ -78,6 +78,7 @@
 <li>NVIDIA Maxwell, Pascal, Volta or Turing GPU</li>
 <li>If you have a GTX 9-series or newer GPU, you&#39;re fine</li>
 </ul>
+<p>To check your GPU driver, try running <strong><code>nvidia-smi</code></strong>. If you get a command not found error, then you do not have the NVIDIA GPU driver installed. If you do, check the driver version (top of the output). It you need to have driver <strong><code>410.x</code></strong> or newer.</p>
 <p>If you meet the above requirements (e.g. you are using a NVIDIA <a href="https://www.nvidia.com/en-sg/data-center/dgx-systems/" target="_blank"><strong>DGX</strong></a> system), you are free to skip to <strong>Step 7</strong>. Else, keep on reading.</p>
 <aside class="warning"><p><strong>Installing Ubuntu is beyond the scope of this guide.</strong> If you require guidance to install Ubuntu on your computer, please take a look at the <a href="https://tutorials.ubuntu.com/tutorial/tutorial-install-ubuntu-desktop?_ga=2.45293924.1169577482.1554652081-1967565470.1554472112#0" target="_blank"><strong>official tutorial</strong></a> or <a href="https://help.ubuntu.com/lts/installation-guide/amd64/index.html" target="_blank"><strong>detailed install guide</strong></a>.</p>
 </aside>
@@ -181,9 +182,9 @@ sudo apt-get install docker-ce docker-ce-cli containerd.io</pre>
       </google-codelab-step>
     
       <google-codelab-step label="Install the NVIDIA Container Runtime" duration="10">
-        <p>In this step, we will install the NVIDIA Container Runtime (also known as <strong><code>nvidia-docker</code></strong>) in order to allow Docker containers to access the GPU. This is required for the applications running in the AI Lab container, such as TensorFlow, PyTorch and RAPIDS, to use the GPU to speed up computations. </p>
+        <p>In this step, we will install the <a href="https://github.com/NVIDIA/nvidia-docker" target="_blank"><strong>NVIDIA Container Runtime</strong></a> (also known as <strong><code>nvidia-docker</code></strong>) in order to allow Docker containers to access the GPU. This is required for the applications running in the AI Lab container, such as TensorFlow, PyTorch and RAPIDS, to use the GPU to speed up computations. </p>
 <p>The benefit of using nvidia-docker is that we can run various CUDA applications and frameworks on a wide range of systems without needing to configure the host system for our own application. For example, OpenPose recommends CUDA 8.0, and if the host system has a different version of CUDA, the application is unlikely to work. With <strong><code>nvidia-docker</code></strong>, as long as our host system has CUDA 8.0 <strong>or newer</strong>, the application will work.</p>
-<aside class="warning"><p>If the application in the container requires a certain version of the CUDA toolkit, the application will work unless your machine&#39;s driver version is too old to support that version of the CUDA toolkit.</p>
+<aside class="warning"><p>If the application in the container requires a certain version of the CUDA toolkit, the application will work unless your machine&#39;s driver version is too old to support that version of the CUDA toolkit. [<a href="https://docs.nvidia.com/deploy/cuda-compatibility/index.html#binary-compatibility__table-toolkit-driver" target="_blank"><strong>More Information</strong></a>]</p>
 </aside>
 <h2>Downloading and installing <strong><code>nvidia-docker</code></strong></h2>
 <p>In this step, you will be downloading and installing the NVIDIA Container Runtime. Please run the following commands in Terminal, and again note that every command is one line.</p>
