@@ -1,0 +1,25 @@
+{
+  "environment": "web",
+  "source": "1r9lIpQsgbi8aulex8UGNcEjPPPNPAp8QZu1Pc0WS25s",
+  "format": "html",
+  "prefix": "https://storage.googleapis.com",
+  "mainga": "UA-49880327-14",
+  "updated": "2019-04-09T17:56:13Z",
+  "id": "snmg-kubeflow-setup",
+  "duration": 120,
+  "title": "SNMG Kubeflow Guided Setup",
+  "author": "tlkh",
+  "summary": "Through this guided lab, you will set up a single-node, multi-GPU (SNMG) Kubeflow on a single-node Kubeflow setup. Please note that that since Kubeflow is in active development, the instructions may become out of date extremely quickly.",
+  "theme": "setup",
+  "status": [
+    "draft"
+  ],
+  "category": [
+    "setup"
+  ],
+  "tags": [
+    "web"
+  ],
+  "feedback": "https://github.com/NVAITC/guided-labs/issues",
+  "url": "snmg-kubeflow-setup"
+}

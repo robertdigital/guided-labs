@@ -1,0 +1,349 @@
+
+<!doctype html>
+
+<html>
+<head>
+  <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
+  <meta name="theme-color" content="#4F7DC9">
+  <meta charset="UTF-8">
+  <title>SNMG Kubeflow Guided Setup</title>
+  <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Source+Code+Pro:400|Roboto:400,300,400italic,500,700|Roboto+Mono">
+  <link rel="stylesheet" href="//fonts.googleapis.com/icon?family=Material+Icons">
+  <link rel="stylesheet" href="../codelab-elements.css">
+  <style>
+    .success {
+      color: #1e8e3e;
+    }
+    .error {
+      color: red;
+    }
+  </style>
+</head>
+<body>
+  <google-codelab-analytics gaid="UA-49880327-14"></google-codelab-analytics>
+  <google-codelab title="SNMG Kubeflow Guided Setup"
+                  environment="web"
+                  feedback-link="https://github.com/NVAITC/guided-labs/issues">
+    
+      <google-codelab-step label="Introduction" duration="5">
+        <aside class="warning"><p><strong>This guide is still a work in progress!</strong></p>
+</aside>
+<p><strong>Kubernetes</strong> is an open-source container orchestration (management) platform. It was originally designed by Google, and is now maintained by the Cloud Native Computing Foundation. It aims to provide a &#34;platform for automating deployment, scaling, and operations of application containers across clusters of hosts&#34;. Such clusters can contain many servers, and it called a Kubernetes cluster.</p>
+<p><strong>Minikube</strong> is a tool that makes it easy to run a single-node Kubernetes cluster on a system. It includes most components needed for a typical full deployment of Kubernetes, including the CNI plugin, DNS, storage provisioner and so on.</p>
+<p><strong>Kubeflow</strong> is a machine learning toolkit that is designed to run on top on Kubernetes. </p>
+<p>In this guide, you will learn how to set-up your own server to run Kubeflow on Minikube.</p>
+<h2 class="checklist"><strong>What you&#39;ll learn</strong></h2>
+<ul class="checklist">
+<li>How to install NVIDIA drivers and CUDA on a Linux system</li>
+<li>How to install Docker and the NVIDIA Container Runtime (<strong><code>nvidia-docker</code></strong>)</li>
+<li>How to install Minikube and access GPUs from Minikube</li>
+<li>How to install Kubeflow on Minikube</li>
+</ul>
+<aside class="warning"><p>This guide assumes that you have unrestricted internet connectivity as you will be downloading large files from various software repositories.</p>
+</aside>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Verifying your System Setup" duration="5">
+        <h2><strong>Important System Requirements</strong></h2>
+<p>It is very important that you verify that you meet the following system requirements:</p>
+<ul>
+<li>Ubuntu 16.04, or Ubuntu 18.04, or a close derivative distro</li>
+<li>Latest stable NVIDIA drivers (currently <code>418.x</code> as of March 2019)</li>
+<li>NVIDIA container runtime (<code>nvidia-docker</code>)</li>
+<li>NVIDIA Maxwell, Pascal, Volta or Turing GPU</li>
+<li>If you have a GTX 9-series or newer GPU, you&#39;re fine</li>
+</ul>
+<p>To check your GPU driver, try running <strong><code>nvidia-smi</code></strong>. If you get a command not found error, then you do not have the NVIDIA GPU driver installed. If you do, check the driver version (top of the output). It you need to have driver <strong><code>410.x</code></strong> or newer, unless you are using the enterprise driver.</p>
+<p>If you meet the above requirements (e.g. you are using a NVIDIA <a href="https://www.nvidia.com/en-sg/data-center/dgx-systems/" target="_blank"><strong>DGX</strong></a> system), you are free to skip to <strong>Step 7</strong>. Else, keep on reading.</p>
+<aside class="warning"><p><strong>Installing Ubuntu is beyond the scope of this guide.</strong> If you require guidance to install Ubuntu on your computer, please take a look at the <a href="https://tutorials.ubuntu.com/tutorial/tutorial-install-ubuntu-desktop?_ga=2.45293924.1169577482.1554652081-1967565470.1554472112#0" target="_blank"><strong>official tutorial</strong></a> or <a href="https://help.ubuntu.com/lts/installation-guide/amd64/index.html" target="_blank"><strong>detailed install guide</strong></a>.</p>
+</aside>
+<aside class="warning"><p><strong>There&#39;s the right way to do things, and also the left way.</strong> If you&#39;re not new to Linux and you don&#39;t mind risking a bit of downtime due to a blotched installation, give the following &#34;shortcut&#34; a try:</p>
+<ol type="1" start="1">
+<li><code>sudo su root</code></li>
+<li><code>apt install curl -y</code></li>
+<li><code>curl https://getcuda.ml/ubuntu.sh | bash</code></li>
+</ol>
+<p><strong>Your system will reboot automatically when completed.</strong></p>
+<p>For more information, visit <a href="https://getcuda.ml/" target="_blank"><strong>getcuda.ml</strong></a> .</p>
+<p>This install works <em>most</em> of the time (in my experience, it actually worked for all but one case, and I&#39;ve done dozens of system setups) and leave your system in the correct state for you to jump straight to <strong>Step 7</strong>.</p>
+</aside>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Install NVIDIA drivers and the CUDA Toolkit" duration="40">
+        <p>To use your NVIDIA GPU for compute tasks like machine learning and deep learning, you will need to install the NVIDIA drivers and CUDA Toolkit.</p>
+<p>For this, please make sure that you are on a <strong>clean</strong> Ubuntu system (no existing NVIDIA drivers or libraries) and that you have <strong><code>sudo</code></strong> (root) permissions. If you&#39;re the only user, you probably do. If you&#39;re using a shared workstation or server, please approach your administrator.</p>
+<h2><strong>Downloading the installation package</strong></h2>
+<p>Download and install NVIDIA drivers and the CUDA Toolkit, we can head over to the NVIDIA website and download the CUDA Toolkit installer, which will install both the CUDA Toolkit, as well as the latest compatible driver.</p>
+<aside class="warning"><p>Be sure to select the <strong>correct OS (Ubuntu version)</strong> and the <strong>deb (network)</strong> file.</p>
+</aside>
+<p><a href="https://developer.nvidia.com/cuda-downloads?target_os=Linux&target_arch=x86_64&target_distro=Ubuntu" target="_blank"><paper-button class="colored" raised>CUDA Toolkit Download (NVIDIA)</paper-button></a></p>
+<aside class="warning"><p>Strictly speaking, we do not need to install the CUDA Toolkit if we only want to use applications in Docker containers. However, having the CUDA Toolkit gives us tools such as <a href="https://developer.nvidia.com/tools-overview" target="_blank"><strong>Nsight</strong></a> which can help us profile our applications in the Docker container.</p>
+</aside>
+<h2><br><strong>Install CUDA and the NVIDIA driver</strong></h2>
+<h3><strong>Open a New Terminal</strong></h3>
+<p>You&#39;ll need to open a new Terminal window:</p>
+<ol type="1" start="1">
+<li>Use the keyboard shortcut <strong><code>CTRL</code></strong> + <strong><code>ALT</code></strong> + <strong><code>T</code></strong> , or navigate to your applications menu and launch the Terminal app</li>
+<li>Type in the following commands (each command is one line)</li>
+<li>You should not get an error at any stage. If so, stop and Google the error.</li>
+</ol>
+<pre># &lt;- denotes this line is a comment
+# navigate to your Downloads folder. Usually, this can be done with:
+cd ~/Downloads
+
+# install the CUDA network repository
+sudo dpkg -i cuda-repo-ubuntu1804_10.1.105-1_amd64.deb
+
+sudo apt-key adv --fetch-keys https://developer.download.nvidia.com/compute/cuda/repos/ubuntu1804/x86_64/7fa2af80.pub
+
+sudo apt-get update
+
+# install the CUDA toolkit and NVIDIA drivers
+sudo apt-get install cuda</pre>
+<aside class="special"><p>The CUDA Toolkit will not be compatible with every version of the driver, hence we install them from the same package to ensure compatibility. This is a good practice to keep to in the future to avoid problems.</p>
+</aside>
+<p>The installation will take some time to complete (around 30 minutes on a Broadband internet connection).</p>
+<p><strong>Please reboot your system before proceeding to the next step.</strong></p>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Verifying the NVIDIA driver has been installed" duration="5">
+        <p>If the installation has succeeded, the all-important <strong><code>nvidia-smi</code></strong> tool will also have been installed. <strong><code>nvidia-smi</code></strong> will allow you to check the current status of the GPUs in your system.</p>
+<h2>Running <strong><code>nvidia-smi</code></strong></h2>
+<p>Open a new Terminal and type <strong><code>nvidia-sm</code></strong>i. It should produce an output similar to the one below:</p>
+<p><img style="width: 624.00px" src="img/3864a64025d9ad0d.png"></p>
+<p>If you see that, congratulations! The NVIDIA drivers and CUDA Toolkit have been installed successfully.</p>
+<p>If you have multiple GPUs on your system, you can run <strong><code>nvidia-smi topo -m</code></strong> to see how the GPUs are interconnected. This will affect which GPUs you may want to choose to run a multi-GPU training job.</p>
+<p><img style="width: 624.00px" src="img/7a3307492f298515.png"></p>
+<p>For example, in the above output (DGX Station), <strong><code>GPU0</code></strong> and <strong><code>GPU3</code></strong> are connected by <strong>two</strong> bonded NVLink connections, while <strong><code>GPU0</code></strong> and <strong><code>GPU1</code></strong> are connected by <strong>one</strong> NVLink connection. This means that <strong><code>GPU0</code></strong> and <strong><code>GPU3</code></strong> can communicate at a higher bandwidth than possible between <strong><code>GPU0</code></strong> and <strong><code>GPU1</code></strong> .</p>
+<aside class="special"><p>The <strong><code>nvidia-smi</code></strong> tool is very powerful and important for investigating GPU-related issues. You can learn more about the tool on <a href="https://www.microway.com/hpc-tech-tips/nvidia-smi_control-your-gpus/" target="_blank"><strong>this website</strong></a>.</p>
+</aside>
+<h2 class="checklist"><strong>What we&#39;ve covered</strong></h2>
+<ul class="checklist">
+<li>How to install NVIDIA drivers and CUDA on a Linux system</li>
+</ul>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Install Docker" duration="5">
+        <p>In this step, you will be installing the commonly used Docker runtime for running containers.</p>
+<h2><strong>Downloading and installing Docker</strong></h2>
+<p>In this step, you will be adding the Docker repository to Ubuntu and install Docker from there. Open a new Terminal and execute the following commands. Again, please take note every command is one line.</p>
+<pre>sudo apt-get install -y apt-transport-https ca-certificates curl software-properties-common
+
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+
+sudo add-apt-repository &#34;deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable&#34;
+
+sudo apt-get update
+
+sudo apt-get install docker-ce docker-ce-cli containerd.io
+
+sudo usermod -aG docker $USER</pre>
+<h2><strong>Verifying your Docker installation</strong></h2>
+<p>To verify that Docker has been installed correctly, we will be running the hello-world container with the following command:</p>
+<pre>docker run hello-world</pre>
+<p>Since the container image <strong><code>hello-world</code></strong> does not yet exist on our system, Docker will <strong>pull</strong> the image from the <a href="https://hub.docker.com/" target="_blank"><strong>Docker Hub</strong></a> before running it. You will see the following output:</p>
+<p><img style="width: 624.00px" src="img/e123ade973fcc9eb.png"></p>
+<p>Congratulations! Now we have a working container runtime.</p>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Install the NVIDIA Container Runtime" duration="15">
+        <p>In this step, we will install the <a href="https://github.com/NVIDIA/nvidia-docker" target="_blank"><strong>NVIDIA Container Runtime</strong></a> (also known as <strong><code>nvidia-docker</code></strong>) in order to allow Docker containers to access the GPU. This is required for the applications running in the AI Lab container, such as TensorFlow, PyTorch and RAPIDS, to use the GPU to speed up computations. </p>
+<p>The benefit of using nvidia-docker is that we can run various CUDA applications and frameworks on a wide range of systems without needing to configure the host system for our own application. For example, OpenPose recommends CUDA 8.0, and if the host system has a different version of CUDA, the application is unlikely to work. With <strong><code>nvidia-docker</code></strong>, as long as our host system has CUDA 8.0 <strong>or newer</strong>, the application will work.</p>
+<aside class="warning"><p>If the application in the container requires a certain version of the CUDA toolkit, the application will work unless your machine&#39;s driver version is too old to support that version of the CUDA toolkit. [<a href="https://docs.nvidia.com/deploy/cuda-compatibility/index.html#binary-compatibility__table-toolkit-driver" target="_blank"><strong>More Information</strong></a>]</p>
+</aside>
+<h2>Downloading and installing <strong><code>nvidia-docker</code></strong></h2>
+<p>In this step, you will be downloading and installing the NVIDIA Container Runtime. Please run the following commands in Terminal, and again note that every command is one line.</p>
+<pre># adding the repository
+
+curl -s -L https://nvidia.github.io/nvidia-docker/gpgkey | sudo apt-key add -
+
+distribution=$(. /etc/os-release;echo $ID$VERSION_ID)
+
+curl -s -L https://nvidia.github.io/nvidia-docker/$distribution/nvidia-docker.list | sudo tee /etc/apt/sources.list.d/nvidia-docker.list
+
+sudo apt-get update
+
+# install nvidia-docker
+sudo apt-get install nvidia-docker2
+
+# restart the docker daemon
+sudo pkill -SIGHUP dockerd</pre>
+<h2>Verifying <code>nvidia-docker</code><strong> is installed correctly</strong></h2>
+<p>To verify that <strong><code>nvidia-docker</code></strong> is installed correctly, you can run the following command to execute <strong><code>nvidia-smi</code></strong> <strong>inside</strong> a docker container.</p>
+<pre>nvidia-docker run --rm nvidia/cuda nvidia-smi
+
+# this also works, and is functionally equivalent:
+docker run --runtime=nvidia --rm nvidia/cuda nvidia-smi</pre>
+<p>Since you probably don&#39;t have the <a href="https://hub.docker.com/r/nvidia/cuda/" target="_blank"><strong><code>nvidia/cuda</code></strong></a> image on your system, Docker will go ahead and pull it from the Docker Hub before running it.</p>
+<p>If you see the <strong><code>nvidia-smi</code></strong> output, then your installation is working:</p>
+<p><img style="width: 624.00px" src="img/ea141ca2c79cf244.png"></p>
+<aside class="special"><p>Notice how, in contrast to when running <strong><code>nvidia-smi</code></strong> on the host system, no processes show up. This is because <strong><code>nvidia-smi</code></strong> is running inside the container, which is isolated and has tightly controlled visibility of the host system. This is what we call container isolation.</p>
+</aside>
+<p>In order for Kubeflow to work properly, we need to make the NVIDIA Container runtime the default runtime for Docker. To achieve this, we need to edit the <strong><code>/etc/docker/daemon.json</code></strong> file:</p>
+<pre>sudo nano /etc/docker/daemon.json</pre>
+<p>Add in &#34;default-runtime&#34;: &#34;nvidia&#34;, into the file such that your file looks something like this:</p>
+<pre>{
+    &#34;default-runtime&#34;: &#34;nvidia&#34;,
+    &#34;runtimes&#34;: {
+        &#34;nvidia&#34;: {
+            &#34;path&#34;: &#34;nvidia-container-runtime&#34;,
+            &#34;runtimeArgs&#34;: []
+        }
+    }
+}</pre>
+<p>Next, we will restart the docker daemon to take into account our new changes and test if the settings worked:</p>
+<pre>sudo pkill -SIGHUP dockerd
+
+docker run --rm nvidia/cuda nvidia-smi</pre>
+<p>If you see the <strong><code>nvidia-smi</code></strong> output, you&#39;re good to go.</p>
+<h2 class="checklist"><strong>What we&#39;ve covered</strong></h2>
+<ul class="checklist">
+<li>How to install NVIDIA drivers and CUDA on a Linux system</li>
+<li>How to install Docker and the NVIDIA Container Runtime (<strong><code>nvidia-docker</code></strong>)</li>
+</ul>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Installing Minikube" duration="20">
+        <h2><strong>Download and Install kubectl and minikube</strong></h2>
+<p>In this step, you will download and install two command-line utilities:</p>
+<ul>
+<li><strong><code>kubectl</code></strong> application needed to interface with Kubernetes clusters</li>
+<li><strong><code>minikube</code></strong> application used to manage minikube nodes</li>
+</ul>
+<pre>curl -Lo kubectl \
+https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl
+chmod +x kubectl
+
+curl -Lo minikube \
+https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64 
+chmod +x minikube
+
+sudo su root
+cp kubectl /usr/local/bin/ &amp;&amp; rm kubectl
+cp minikube /usr/local/bin &amp;&amp; rm minikube
+exit</pre>
+<h2><strong>Start the Minikube cluster</strong></h2>
+<pre>export MINIKUBE_WANTREPORTERRORPROMPT=false
+export MINIKUBE_HOME=$HOME
+export CHANGE_MINIKUBE_NONE_USER=true
+export KUBECONFIG=$HOME/.kube/config
+
+sudo -E minikube start --vm-driver=none --feature-gates=DevicePlugins=true</pre>
+<p>Be patient as you wait for your minikube cluster to spin up. It might appear to freeze at some stage as it needs to download a fair number of container images.</p>
+<h2><strong>Install the NVIDIA Device Plugin</strong></h2>
+<p>The NVIDIA device plugin is required for Kubernetes to be aware of NVIDIA GPUs so it can monitor their availability and schedule them for pods that request for them (with the <strong><code>nvidia.com/gpu</code></strong> resource type).</p>
+<p>To installing the NVIDIA device plugin, run the following command:</p>
+<pre>kubectl create -f \
+https://raw.githubusercontent.com/NVIDIA/k8s-device-plugin/1.0.0-beta/nvidia-device-plugin.yml</pre>
+<p>The NVIDIA device plugin will now begin to deploy. Wait around 30 seconds, and you will be able to check if the Kubernetes cluster is now GPU-aware. Run the following command to verify this:</p>
+<pre>kubectl get nodes \
+-o=custom-columns=NAME:.metadata.name,GPUs:.status.capacity.&#39;nvidia\.com/gpu&#39;</pre>
+<h2 class="checklist"><strong>What we&#39;ve covered</strong></h2>
+<ul class="checklist">
+<li>How to install NVIDIA drivers and CUDA on a Linux system</li>
+<li>How to install Docker and the NVIDIA Container Runtime (<strong><code>nvidia-docker</code></strong>)</li>
+<li>How to install Minikube and access GPUs from Minikube</li>
+</ul>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Installing Helm and Ksonnet" duration="10">
+        <p>We will now install two additional utilities that can be thought of as third-party package managers for Kubernetes. These are called <strong>Helm</strong> (used to deploy <strong>Helm charts</strong>) and well as <strong>ksonnet</strong> (used to deploy <strong>ksonnet prototypes</strong>).</p>
+<h2><strong>Install Helm</strong></h2>
+<pre>wget \
+https://storage.googleapis.com/kubernetes-helm/helm-v2.13.1-linux-amd64.tar.gz
+
+tar -zxvf helm-v2.13.1-linux-amd64.tar.gz
+
+sudo mv linux-amd64/helm /usr/local/bin/helm
+
+# block until helm has fully initialised
+helm init --wait</pre>
+<h2><strong>Install Ksonnet</strong></h2>
+<pre>wget \
+https://github.com/ksonnet/ksonnet/releases/download/v0.13.1/ks_0.13.1_linux_amd64.tar.gz
+
+tar -xzf ks_0.13.1_linux_amd64.tar.gz
+
+sudo cp ks_0.13.1_linux_amd64/ks /usr/local/bin/
+
+# test with the ks command
+ks</pre>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Installing Kubeflow" duration="15">
+        <p>Now we can finally move on to install the star of the show: Kubeflow! The deployment is relatively straightforward:</p>
+<pre># environment variables for deployment
+export KUBEFLOW_TAG=v0.4.1
+export KUBEFLOW_SRC=/home/kubeflow/kf_src
+export KFAPP=kf_app
+
+mkdir ${KUBEFLOW_SRC}
+cd ${KUBEFLOW_SRC}
+
+curl \
+https://raw.githubusercontent.com/kubeflow/kubeflow/${KUBEFLOW_TAG}/scripts/download.sh | bash
+
+${KUBEFLOW_SRC}/scripts/kfctl.sh init ${KFAPP} --platform none
+
+cd ${KFAPP}
+
+${KUBEFLOW_SRC}/scripts/kfctl.sh generate k8s
+
+${KUBEFLOW_SRC}/scripts/kfctl.sh apply k8s</pre>
+<p>Please be aware that an error in deployment may not be immediately obvious. Do pay attention to the last few lines of output to make sure that no error is being displayed. Use the next command to wait for the Kubeflow pods to have started up in a healthy state:</p>
+<pre>Kubectl get pods -n kubeflow
+
+# all pods should be ready</pre>
+<p>Next, we want to permanently expose the Kubeflow web UI as a <strong><code>nodeport</code></strong> on our system:</p>
+<pre>kubectl get services --all-namespaces
+
+kubectl expose service ambassador \
+ --type=NodePort --name kubeflow-ui --namespace kubeflow</pre>
+<h2 class="checklist"><strong>What we&#39;ve covered</strong></h2>
+<ul class="checklist">
+<li>How to install NVIDIA drivers and CUDA on a Linux system</li>
+<li>How to install Docker and the NVIDIA Container Runtime (<strong><code>nvidia-docker</code></strong>)</li>
+<li>How to install Minikube and access GPUs from Minikube</li>
+<li>How to install Kubeflow on Minikube</li>
+</ul>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Next Steps" duration="0">
+        <p>Congratulations! You have reached the end of this guide.</p>
+<p>Learn more about:</p>
+<ul>
+<li><a href="https://github.com/kubernetes/minikube" target="_blank">Minikube</a></li>
+<li><a href="https://kubernetes.io/docs/tutorials/kubernetes-basics/" target="_blank">Kubernetes basics</a>, <a href="https://www.youtube.com/watch?v=4ht22ReBjno" target="_blank">Illustrated Children&#39;s Guide to Kubernetes</a> </li>
+<li><a href="https://www.kubeflow.org/docs/about/kubeflow/" target="_blank">Kubeflow</a></li>
+</ul>
+
+
+      </google-codelab-step>
+    
+  </google-codelab>
+
+  <script src="https://storage.googleapis.com/codelab-elements/native-shim.js"></script>
+  <script src="https://storage.googleapis.com/codelab-elements/custom-elements.min.js"></script>
+  <script src="https://storage.googleapis.com/codelab-elements/prettify.js"></script>
+  <script src="https://storage.googleapis.com/codelab-elements/codelab-elements.js"></script>
+
+</body>
+</html>
