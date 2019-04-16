@@ -1,4 +1,3 @@
-
 <!doctype html>
 
 <html>
@@ -37,6 +36,7 @@
 <li>How to install NVIDIA drivers and CUDA on a Linux system</li>
 <li>How to install Docker and the NVIDIA Container Runtime (<strong><code>nvidia-docker</code></strong>)</li>
 <li>How to install Minikube and access GPUs from Minikube</li>
+<li>How to set up a persistent NFS storage backend for Kubernetes</li>
 <li>How to install Kubeflow on Minikube</li>
 </ul>
 <aside class="warning"><p>This guide assumes that you have unrestricted internet connectivity as you will be downloading large files from various software repositories.</p>
@@ -61,9 +61,9 @@
 </aside>
 <aside class="warning"><p><strong>There&#39;s the right way to do things, and also the left way.</strong> If you&#39;re not new to Linux and you don&#39;t mind risking a bit of downtime due to a blotched installation, give the following &#34;shortcut&#34; a try:</p>
 <ol type="1" start="1">
-<li><code>sudo su root</code></li>
-<li><code>apt install curl -y</code></li>
-<li><code>curl https://getcuda.ml/ubuntu.sh | bash</code></li>
+<li><strong><code>sudo su root</code></strong></li>
+<li><strong><code>apt install curl -y</code></strong></li>
+<li><strong><code>curl https://getcuda.ml/ubuntu.sh | bash</code></strong></li>
 </ol>
 <p><strong>Your system will reboot automatically when completed.</strong></p>
 <p>For more information, visit <a href="https://getcuda.ml/" target="_blank"><strong>getcuda.ml</strong></a> .</p>
@@ -286,6 +286,77 @@ ks</pre>
 
       </google-codelab-step>
     
+      <google-codelab-step label="Set up an NFS storage backend for Kubernetes" duration="15">
+        <p>The default configuration of minikube is to use the <strong><code>/tmp/</code></strong> directory to store persistent volumes. Not a great idea! Let&#39;s install something closer to what you&#39;ll find on an actual Kubernetes cluster: an NFS storage backend (there are others).</p>
+<h2><strong>Installing and Configuring NFS</strong></h2>
+<p>For NFS, we have an NFS <strong>server</strong> (which provides the storage) and one or more <strong>clients</strong> (which consumes the storage from the server). For the purpose of this guided lab, we will use the same machine as a server and client. You could however, follow this part of the instructions on another system if you wish to use that as a NFS server instead. You may also skip this section if you already have an NFS server.</p>
+<h3><strong>Installing the NFS Server</strong></h3>
+<pre>sudo apt update
+sudo apt install nfs-kernel-server
+
+export SHARE_DIR=/var/nfs/share
+sudo mkdir $SHARE_DIR -p
+sudo chown nobody:nogroup $SHARE_DIR</pre>
+<pre>sudo nano /etc/exports
+
+# add in the following lines
+# note: replace &lt;SHARE_DIR&gt; with the correct directory!
+
+&lt;SHARE_DIR&gt;    203.0.113.24(rw,async,no_subtree_check)
+
+# press CTRL + X to save and exit
+
+sudo systemctl restart nfs-kernel-server </pre>
+<h3><strong>Installing the NFS Client</strong></h3>
+<pre>sudo apt update
+sudo apt install nfs-common
+
+sudo mkdir -p /nfs/
+
+# define where the share directory is on the NFS server
+export SHARE_DIR=/var/nfs/share
+
+sudo mount &lt;NFS_SVR_IP&gt;:$SHARE_DIR /nfs/
+
+# check mount
+df -h</pre>
+<h3>Test the NFS storage access</h3>
+<pre>touch /nfs/test
+ls -l /nfs/</pre>
+<h3><strong>Mount the NFS storage at boot</strong></h3>
+<p>After verifying that the NFS storage works, we can safely mount it at boot-time.</p>
+<pre>sudo nano /etc/fstab
+
+# add the follow line
+
+&lt;NFS_SVR_IP&gt;:&lt;SHARE_DIR&gt;    /nfs/   nfs auto,nofail,noatime,nolock,intr,tcp,actimeo=1800 0 0</pre>
+<h2><strong>Set up the NFS Storage Class for Kubernetes</strong></h2>
+<p>The following helm chat installs custom <strong>storage class</strong> into your Kubernetes cluster. It also installs a NFS client provisioner into the cluster which dynamically creates <strong>persistent volumes</strong> from single NFS share.</p>
+<aside class="special"><p><strong>Kubernetes Concepts</strong></p>
+<ul>
+<li>A <a href="https://kubernetes.io/docs/concepts/storage/storage-classes/" target="_blank"><strong><code>StorageClass</code></strong></a> defines a type of storage that a Kubernetes cluster can use for <strong>persistent volumes</strong>.</li>
+<li>A <a href="https://kubernetes.io/docs/concepts/storage/persistent-volumes/" target="_blank"><strong><code>PersistentVolume</code></strong></a> is a virtual disk resource that contains non-ephemeral data. Cluster users can create a <strong><code>PersistantVolumeClaim</code></strong> which will then result in a <strong><code>PersistentVolume</code></strong> being provisioned as requested.</li>
+</ul>
+</aside>
+<pre>helm install stable/nfs-client-provisioner \
+ --set nfs.server=&lt;NFS_SVR_IP&gt; \
+ --set nfs.path=&lt;SHARE_DIR&gt; \
+ --wait</pre>
+<aside class="special"><p>Learn more about the <strong><code>nfs-client-provisioner</code></strong> chart at the <a href="https://github.com/helm/charts/tree/master/stable/nfs-client-provisioner" target="_blank"><strong>GitHub repository</strong></a>.</p>
+</aside>
+<h3><strong>Set NFS as the default Storage Class</strong></h3>
+<p>For Kubeflow to persist data correctly, we will need to set NFS as the default storage class for the Kubernetes cluster.</p>
+<h2 class="checklist"><strong>What we&#39;ve covered</strong></h2>
+<ul class="checklist">
+<li>How to install NVIDIA drivers and CUDA on a Linux system</li>
+<li>How to install Docker and the NVIDIA Container Runtime (<strong><code>nvidia-docker</code></strong>)</li>
+<li>How to install Minikube and access GPUs from Minikube</li>
+<li>How to set up a persistent NFS storage backend for Kubernetes</li>
+</ul>
+
+
+      </google-codelab-step>
+    
       <google-codelab-step label="Installing Kubeflow" duration="15">
         <p>Now we can finally move on to install the star of the show: Kubeflow! The deployment is relatively straightforward:</p>
 <pre># environment variables for deployment
@@ -307,7 +378,7 @@ ${KUBEFLOW_SRC}/scripts/kfctl.sh generate k8s
 
 ${KUBEFLOW_SRC}/scripts/kfctl.sh apply k8s</pre>
 <p>Please be aware that an error in deployment may not be immediately obvious. Do pay attention to the last few lines of output to make sure that no error is being displayed. Use the next command to wait for the Kubeflow pods to have started up in a healthy state:</p>
-<pre>Kubectl get pods -n kubeflow
+<pre>kubectl get pods -n kubeflow
 
 # all pods should be ready</pre>
 <p>Next, we want to permanently expose the Kubeflow web UI as a <strong><code>nodeport</code></strong> on our system:</p>
@@ -315,11 +386,14 @@ ${KUBEFLOW_SRC}/scripts/kfctl.sh apply k8s</pre>
 
 kubectl expose service ambassador \
  --type=NodePort --name kubeflow-ui --namespace kubeflow</pre>
+<aside class="special"><p>You can run <strong><code>minikube dashboard</code></strong> to get access to the Kubernetes Dashboard to see the status of all your Kubernetes resources.</p>
+</aside>
 <h2 class="checklist"><strong>What we&#39;ve covered</strong></h2>
 <ul class="checklist">
 <li>How to install NVIDIA drivers and CUDA on a Linux system</li>
 <li>How to install Docker and the NVIDIA Container Runtime (<strong><code>nvidia-docker</code></strong>)</li>
 <li>How to install Minikube and access GPUs from Minikube</li>
+<li>How to set up a persistent NFS storage backend for Kubernetes</li>
 <li>How to install Kubeflow on Minikube</li>
 </ul>
 
