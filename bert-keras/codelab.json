@@ -1,0 +1,25 @@
+{
+  "environment": "web",
+  "format": "html",
+  "prefix": "https://storage.googleapis.com",
+  "mainga": "UA-49880327-14",
+  "updated": "2019-06-27T13:09:01Z",
+  "id": "bert-keras",
+  "duration": 75,
+  "title": "BERT with Keras Guide",
+  "authors": "timothyl@nvidia.com",
+  "summary": "Through this guided lab, you learn how to easily train BERT in Keras inside a Colab notebook and on a server with multiple GPUs.",
+  "source": "14UHz8LS9lbSV6ZnR3So8ILR1jefH7wIfNGcdfZmukWk",
+  "theme": "guide",
+  "status": [
+    "draft"
+  ],
+  "category": [
+    "guide"
+  ],
+  "tags": [
+    "web"
+  ],
+  "feedback": "https://github.com/NVAITC/guided-labs/issues",
+  "url": "bert-keras"
+}

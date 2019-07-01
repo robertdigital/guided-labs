@@ -1,0 +1,128 @@
+
+<!doctype html>
+
+<html>
+<head>
+  <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
+  <meta name="theme-color" content="#4F7DC9">
+  <meta charset="UTF-8">
+  <title>BERT with Keras Guide</title>
+  <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Source+Code+Pro:400|Roboto:400,300,400italic,500,700|Roboto+Mono">
+  <link rel="stylesheet" href="//fonts.googleapis.com/icon?family=Material+Icons">
+  <link rel="stylesheet" href="https://storage.googleapis.com/codelab-elements/codelab-elements.css">
+  <style>
+    .success {
+      color: #1e8e3e;
+    }
+    .error {
+      color: red;
+    }
+  </style>
+</head>
+<body>
+  <google-codelab-analytics gaid="UA-49880327-14"></google-codelab-analytics>
+  <google-codelab codelab-gaid=""
+                  id="bert-keras"
+                  title="BERT with Keras Guide"
+                  environment="web"
+                  feedback-link="https://github.com/NVAITC/guided-labs/issues">
+    
+      <google-codelab-step label="Introduction" duration="5">
+        <aside class="warning"><p><strong>This guide is still a work in progress!</strong></p>
+</aside>
+<p><strong>BERT</strong> (Bidirectional Encoder Representations from Transformers) is a state-of-the-art NLP model. Since BERT achieves state-of-the-art performance on a large suite of NLP tasks without any task specific architecture, we can finetune it to solve new problems. You can learn more about BERT by reading the paper on <a href="https://arxiv.org/abs/1810.04805" target="_blank">ArXiv</a>.</p>
+<p>In these examples, we will be wrapping BERT in a Keras layer. <a href="https://keras.io/" target="_blank"><strong>Keras</strong></a> is an easily to use deep learning library. Wrapping BERT as a Keras layer gives us the flexibility to use BERT by itself, or as a larger Keras model that only uses BERT as a sub-component. We will be using the implementation of Keras that ships as part of TensorFlow (<code>tf.keras</code>), as well as <strong>automatic mixed precision (AMP)</strong> to significantly speed up training (about 3x) on NVIDIA Tensor Core GPUs. We will also make use of the <strong>XLA</strong> compiler in TensorFlow to further increase the speed of model training. This enables us to quickly prototype and easily train custom BERT models. </p>
+<p>The first section of the guide covers how to use the <a href="https://colab.research.google.com/" target="_blank">Google Colaboratory</a> platform, also referred to as <strong>Colab</strong>. Colab is a <strong>free-to-use</strong> hosted Jupyter Notebook service by Google that also provides access to an NVIDIA Tesla T4 Tensor Core GPU for training deep learning models. </p>
+<p>The second section of the guide covers how to use and on a server with multiple GPUs (such as a DGX-1 or a cloud VM with 8 GPUs). We will use <strong>Horovod</strong> (a distributed training library by Uber) to achieve efficient single-node, multi-GPU training, dramatically shortening the time it takes to train a BERT model.</p>
+<h2 class="checklist" is-upgraded><strong>What you&#39;ll learn</strong></h2>
+<ul class="checklist">
+<li>How to train BERT with Keras on Colab</li>
+<li>How to train BERT with Keras on a multi-GPU server</li>
+</ul>
+<aside class="warning"><p>This guide assumes that you have unrestricted internet connectivity as you will be downloading large files from the internet.</p>
+</aside>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Train BERT with Keras on Colab" duration="30">
+        <p>{ Colab intro }</p>
+<p>Introduce parts of notebook</p>
+<p>Introduce key points about bert code</p>
+<p class="image-container"><img style="width: 502.75px" src="img/d20d9727a73f098b.png"></p>
+<p>Talk about key points about AMP + XLA + RV speeding up the code</p>
+<p class="image-container"><img style="width: 615.09px" src="img/9553ae410eef7381.png"></p>
+<h2 class="checklist" is-upgraded><strong>What we&#39;ve covered</strong></h2>
+<ul class="checklist">
+<li>How to train BERT with Keras on Colab</li>
+</ul>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Introduction to training on a multi-GPU server" duration="5">
+        <p>Benefits of training on a multi-GPU NVIDIA server</p>
+<p class="image-container"><img style="width: 598.81px" src="img/bca776740428797e.png"></p>
+<p>DGX pitch</p>
+<p>NVLink</p>
+<p>Nvidia-docker</p>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Verifying your System Setup" duration="5">
+        <p>Before we move on to multi-GPU training on a server or a cloud VM, here are some important system requirements to ensure that your server or cloud VM meets the following system requirements</p>
+<h2 is-upgraded><strong>Important System Requirements</strong></h2>
+<p>It is very important that you verify that you meet the following system requirements:</p>
+<ul>
+<li>Ubuntu 16.04, or Ubuntu 18.04, or a close derivative distro</li>
+<li>Latest stable NVIDIA drivers (currently <code>418.x</code> as of March 2019)</li>
+<li>NVIDIA container runtime (<code>nvidia-docker</code>)</li>
+<li>NVIDIA Volta or Turing GPU with Tensor Cores</li>
+<li>If you have an RTX GPU, you&#39;re good to go</li>
+</ul>
+<p>To check your GPU driver, try running <strong><code>nvidia-smi</code></strong>. If you get a command not found error, then you do not have the NVIDIA GPU driver installed. If you do, check the driver version (top of the output). It you need to have driver <strong><code>410.x</code></strong> or newer, unless you are using the enterprise driver.</p>
+<aside class="warning"><p><strong>Installing Ubuntu is beyond the scope of this guide.</strong> If you require guidance to install Ubuntu on your computer, please take a look at the <a href="https://tutorials.ubuntu.com/tutorial/tutorial-install-ubuntu-desktop?_ga=2.45293924.1169577482.1554652081-1967565470.1554472112#0" target="_blank"><strong>official tutorial</strong></a> or <a href="https://help.ubuntu.com/lts/installation-guide/amd64/index.html" target="_blank"><strong>detailed install guide</strong></a>.</p>
+</aside>
+<aside class="warning"><p><strong>There&#39;s the right way to do things, and also the left way.</strong> If you&#39;re not new to Linux and you don&#39;t mind risking a bit of downtime due to a blotched installation, give the following &#34;shortcut&#34; a try:</p>
+<ol type="1" start="1">
+<li><strong><code>sudo su root</code></strong></li>
+<li><strong><code>apt install curl -y</code></strong></li>
+<li><strong><code>curl https://getcuda.ml/ubuntu.sh | bash</code></strong></li>
+</ol>
+<p><strong>Your system will reboot automatically when completed.</strong></p>
+<p>For more information, visit <a href="https://getcuda.ml/" target="_blank"><strong>getcuda.ml</strong></a> .</p>
+<p>This install works <em>most</em> of the time (in my experience, it actually worked for all but one case, and I&#39;ve done dozens of system setups) and leave your system in the correct state for you to continue with this guided lab.</p>
+</aside>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Train BERT with Keras on a multi-GPU server" duration="30">
+        <p>Introduce Horovod</p>
+<p>Introduce key parts of training script that differ from colab</p>
+<p>Explain how to run</p>
+<h2 class="checklist" is-upgraded><strong>What we&#39;ve covered</strong></h2>
+<ul class="checklist">
+<li>How to train BERT with Keras on Colab</li>
+<li>How to train BERT with Keras on a multi-GPU server</li>
+</ul>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Next Steps" duration="0">
+        <p>Congratulations! You have reached the end of this guide.</p>
+
+
+      </google-codelab-step>
+    
+  </google-codelab>
+
+  <script src="https://storage.googleapis.com/codelab-elements/native-shim.js"></script>
+  <script src="https://storage.googleapis.com/codelab-elements/custom-elements.min.js"></script>
+  <script src="https://storage.googleapis.com/codelab-elements/prettify.js"></script>
+  <script src="https://storage.googleapis.com/codelab-elements/codelab-elements.js"></script>
+
+</body>
+</html>

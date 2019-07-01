@@ -9,7 +9,7 @@
   <title>AI Lab Guided Setup</title>
   <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Source+Code+Pro:400|Roboto:400,300,400italic,500,700|Roboto+Mono">
   <link rel="stylesheet" href="//fonts.googleapis.com/icon?family=Material+Icons">
-  <link rel="stylesheet" href="../codelab-elements.css">
+  <link rel="stylesheet" href="https://storage.googleapis.com/codelab-elements/codelab-elements.css">
   <style>
     .success {
       color: #1e8e3e;
@@ -21,21 +21,23 @@
 </head>
 <body>
   <google-codelab-analytics gaid="UA-49880327-14"></google-codelab-analytics>
-  <google-codelab title="AI Lab Guided Setup"
+  <google-codelab codelab-gaid=""
+                  id="ai-lab-setup"
+                  title="AI Lab Guided Setup"
                   environment="web"
                   feedback-link="https://github.com/NVAITC/guided-labs/issues">
     
       <google-codelab-step label="Introduction" duration="5">
         <aside class="warning"><p><strong>This guide is still a work in progress!</strong></p>
 </aside>
-<p><img style="width: 729.50px" src="img/bf16c84252f482db.png"></p>
+<p class="image-container"><img style="width: 729.50px" src="img/bf16c84252f482db.png"></p>
 <p>The <strong>AI Lab</strong> container has been painstakingly tailored to provide you with the best out-of-the-box experience to use various AI frameworks. These include the various Python data-science, machine learning, and deep learning frameworks. Where possible, the libraries are GPU-accelerated and optimised for performance.</p>
 <p>The AI Lab container has been engineered such all functionality can be used via a web browser on the same machine, or on a remote machine (e.g. server) with no client-side installation required, other than having a web browser. </p>
 <p>To find out more, head over to the <a href="https://github.com/NVAITC/ai-lab/blob/master/README.md" target="_blank"><strong>GitHub repository</strong></a> where you will find more detailed information about AI Lab.</p>
 <p>In this guide, you will learn how to set-up your own personal AI development environment. You will configure your Linux workstation or server to use with AI Lab (as well as <a href="https://www.nvidia.com/en-sg/gpu-cloud/" target="_blank"><strong>NGC containers</strong></a>) to swiftly get started with a wide range of AI projects without worrying about installing and configuring the various libraries.</p>
 <aside class="special"><p><strong>NGC (NVIDIA GPU CLOUD)</strong> containers are officially validated containers provided by NVIDIA to provide maximum performance stability in production use-cases. In contrast, <strong>AI Lab</strong> is not an official NVIDIA product, but is designed to be extremely user friendly.</p>
 </aside>
-<h2 class="checklist"><strong>What you&#39;ll learn</strong></h2>
+<h2 class="checklist" is-upgraded><strong>What you&#39;ll learn</strong></h2>
 <ul class="checklist">
 <li>How to install NVIDIA drivers and CUDA on a Linux system</li>
 <li>How to install Docker and the NVIDIA Container Runtime (<strong><code>nvidia-docker</code></strong>)</li>
@@ -50,18 +52,18 @@
     
       <google-codelab-step label="Key Concepts" duration="10">
         <p>This section touches on two important pieces of software you will need to be familiar with to use the AI Lab container effectively: <strong>Docker</strong>, and <strong>Jupyter Notebook</strong>.</p>
-<h2><strong>What is a Docker container?</strong></h2>
+<h2 is-upgraded><strong>What is a Docker container?</strong></h2>
 <p>To standardise and simplify the process of running the various software frameworks across many different environments, the industry has largely turned to using containers. This largely solves the &#34;<em>it works on my machine!</em>&#34; problem, where an application runs on one computer but not another due to various dependency issues.</p>
 <p>You might have heard of virtual machines. Virtual machines take up a lot of resources and are slow because they have a lot of overhead in running multiple full versions of the operating system (OS). A container can be thought of as a very lightweight and efficient form of a virtual machine that uses the host OS kernel instead. </p>
-<p><img style="width: 624.00px" src="img/f7dab61cd3beab47.png"></p>
+<p class="image-container"><img style="width: 624.00px" src="img/f7dab61cd3beab47.png"></p>
 <p>Docker containers are a type of container runtime that is designed for application containers. This means that Docker images contain a snapshot of a application already configured and installed, and launching a new Docker container from that image allows you to run that application immediately without worrying about installation procedures or configuration.</p>
 <p>The NVIDIA Container Runtime (<strong><code>nvidia-docker</code></strong>) provides containers a way to access the NVIDIA GPUs on a workstation or server.</p>
 <aside class="special"><p>Learn more about Docker at the <a href="https://docs.docker.com/get-started/" target="_blank"><strong>Official Docker Get Started Guide</strong></a>.</p>
 </aside>
-<h2><strong>What is Jupyter notebook?</strong></h2>
+<h2 is-upgraded><strong>What is Jupyter notebook?</strong></h2>
 <p>Jupyter Notebook (and the newer JupyterLab) provide <strong>interactive computing environments</strong> (also known as &#34;notebooks&#34;)in a web-based interface. It is similar in some ways to tools such as Wolfram Mathematica.</p>
 <p>Jupyter notebooks embody the idea of a <strong>computational narrative</strong>, where narrative text, code, results, images, and even interactive widgets are all part of the same document. </p>
-<p><img style="width: 624.00px" src="img/9a71fff9031c6c46.png"></p>
+<p class="image-container"><img style="width: 624.00px" src="img/9a71fff9031c6c46.png"></p>
 <aside class="special"><p>Learn more about <a href="https://www.nature.com/articles/d41586-018-07196-1" target="_blank"><strong>why data scientists love Jupyter</strong></a>, and some <a href="https://www.datacamp.com/community/blog/jupyter-notebook-cheat-sheet" target="_blank"><strong>tips and tricks to make the best out of it</strong></a>! Also head over to the <a href="https://jupyter.org/" target="_blank"><strong>official website</strong></a>.</p>
 </aside>
 
@@ -69,7 +71,7 @@
       </google-codelab-step>
     
       <google-codelab-step label="Verifying your System Setup" duration="5">
-        <h2><strong>Important System Requirements</strong></h2>
+        <h2 is-upgraded><strong>Important System Requirements</strong></h2>
 <p>It is very important that you verify that you meet the following system requirements:</p>
 <ul>
 <li>Ubuntu 16.04, or Ubuntu 18.04, or a close derivative distro</li>
@@ -99,15 +101,15 @@
       <google-codelab-step label="Install NVIDIA drivers and the CUDA Toolkit" duration="40">
         <p>To use your NVIDIA GPU for compute tasks like machine learning and deep learning, you will need to install the NVIDIA drivers and CUDA Toolkit.</p>
 <p>For this, please make sure that you are on a <strong>clean</strong> Ubuntu system (no existing NVIDIA drivers or libraries) and that you have <strong><code>sudo</code></strong> (root) permissions. If you&#39;re the only user, you probably do. If you&#39;re using a shared workstation or server, please approach your administrator.</p>
-<h2><strong>Downloading the installation package</strong></h2>
+<h2 is-upgraded><strong>Downloading the installation package</strong></h2>
 <p>Download and install NVIDIA drivers and the CUDA Toolkit, we can head over to the NVIDIA website and download the CUDA Toolkit installer, which will install both the CUDA Toolkit, as well as the latest compatible driver.</p>
 <aside class="warning"><p>Be sure to select the <strong>correct OS (Ubuntu version)</strong> and the <strong>deb (network)</strong> file.</p>
 </aside>
 <p><a href="https://developer.nvidia.com/cuda-downloads?target_os=Linux&target_arch=x86_64&target_distro=Ubuntu" target="_blank"><paper-button class="colored" raised>CUDA Toolkit Download (NVIDIA)</paper-button></a></p>
 <aside class="warning"><p>Strictly speaking, we do not need to install the CUDA Toolkit if we only want to use applications in Docker containers. However, having the CUDA Toolkit gives us tools such as <a href="https://developer.nvidia.com/tools-overview" target="_blank"><strong>Nsight</strong></a> which can help us profile our applications in the Docker container.</p>
 </aside>
-<h2><br><strong>Install CUDA and the NVIDIA driver</strong></h2>
-<h3><strong>Open a New Terminal</strong></h3>
+<h2 is-upgraded><br><strong>Install CUDA and the NVIDIA driver</strong></h2>
+<h3 is-upgraded><strong>Open a New Terminal</strong></h3>
 <p>You&#39;ll need to open a new Terminal window:</p>
 <ol type="1" start="1">
 <li>Use the keyboard shortcut <strong><code>CTRL</code></strong> + <strong><code>ALT</code></strong> + <strong><code>T</code></strong> , or navigate to your applications menu and launch the Terminal app</li>
@@ -137,16 +139,16 @@ sudo apt-get install cuda</pre>
     
       <google-codelab-step label="Verifying the NVIDIA driver has been installed" duration="5">
         <p>If the installation has succeeded, the all-important <strong><code>nvidia-smi</code></strong> tool will also have been installed. <strong><code>nvidia-smi</code></strong> will allow you to check the current status of the GPUs in your system.</p>
-<h2>Running <strong><code>nvidia-smi</code></strong></h2>
+<h2 is-upgraded>Running <strong><code>nvidia-smi</code></strong></h2>
 <p>Open a new Terminal and type <strong><code>nvidia-sm</code></strong>i. It should produce an output similar to the one below:</p>
-<p><img style="width: 624.00px" src="img/3864a64025d9ad0d.png"></p>
+<p class="image-container"><img style="width: 624.00px" src="img/3864a64025d9ad0d.png"></p>
 <p>If you see that, congratulations! The NVIDIA drivers and CUDA Toolkit have been installed successfully.</p>
 <p>If you have multiple GPUs on your system, you can run <strong><code>nvidia-smi topo -m</code></strong> to see how the GPUs are interconnected. This will affect which GPUs you may want to choose to run a multi-GPU training job.</p>
-<p><img style="width: 624.00px" src="img/7a3307492f298515.png"></p>
+<p class="image-container"><img style="width: 624.00px" src="img/7a3307492f298515.png"></p>
 <p>For example, in the above output (DGX Station), <strong><code>GPU0</code></strong> and <strong><code>GPU3</code></strong> are connected by <strong>two</strong> bonded NVLink connections, while <strong><code>GPU0</code></strong> and <strong><code>GPU1</code></strong> are connected by <strong>one</strong> NVLink connection. This means that <strong><code>GPU0</code></strong> and <strong><code>GPU3</code></strong> can communicate at a higher bandwidth than possible between <strong><code>GPU0</code></strong> and <strong><code>GPU1</code></strong> .</p>
 <aside class="special"><p>The <strong><code>nvidia-smi</code></strong> tool is very powerful and important for investigating GPU-related issues. You can learn more about the tool on <a href="https://www.microway.com/hpc-tech-tips/nvidia-smi_control-your-gpus/" target="_blank"><strong>this website</strong></a>.</p>
 </aside>
-<h2 class="checklist"><strong>What we&#39;ve covered</strong></h2>
+<h2 class="checklist" is-upgraded><strong>What we&#39;ve covered</strong></h2>
 <ul class="checklist">
 <li>How to install NVIDIA drivers and CUDA on a Linux system</li>
 </ul>
@@ -156,7 +158,7 @@ sudo apt-get install cuda</pre>
     
       <google-codelab-step label="Install Docker" duration="5">
         <p>In this step, you will be installing the commonly used Docker runtime for running containers.</p>
-<h2><strong>Downloading and installing Docker</strong></h2>
+<h2 is-upgraded><strong>Downloading and installing Docker</strong></h2>
 <p>In this step, you will be adding the Docker repository to Ubuntu and install Docker from there. Open a new Terminal and execute the following commands. Again, please take note every command is one line.</p>
 <pre>sudo apt-get install -y apt-transport-https ca-certificates curl software-properties-common
 
@@ -171,11 +173,11 @@ sudo apt-get install docker-ce docker-ce-cli containerd.io</pre>
 <p>If you would like to run docker commands without needing to use <code>sudo</code>, please run the following command:</p>
 <p><code>sudo usermod -aG docker $USER</code></p>
 </aside>
-<h2><strong>Verifying your Docker installation</strong></h2>
+<h2 is-upgraded><strong>Verifying your Docker installation</strong></h2>
 <p>To verify that Docker has been installed correctly, we will be running the hello-world container with the following command:</p>
 <pre>docker run hello-world</pre>
 <p>Since the container image <strong><code>hello-world</code></strong> does not yet exist on our system, Docker will <strong>pull</strong> the image from the <a href="https://hub.docker.com/" target="_blank"><strong>Docker Hub</strong></a> before running it. You will see the following output:</p>
-<p><img style="width: 624.00px" src="img/e123ade973fcc9eb.png"></p>
+<p class="image-container"><img style="width: 624.00px" src="img/e123ade973fcc9eb.png"></p>
 <p>Congratulations! Now we have a working container runtime.</p>
 
 
@@ -186,7 +188,7 @@ sudo apt-get install docker-ce docker-ce-cli containerd.io</pre>
 <p>The benefit of using nvidia-docker is that we can run various CUDA applications and frameworks on a wide range of systems without needing to configure the host system for our own application. For example, OpenPose recommends CUDA 8.0, and if the host system has a different version of CUDA, the application is unlikely to work. With <strong><code>nvidia-docker</code></strong>, as long as our host system has CUDA 8.0 <strong>or newer</strong>, the application will work.</p>
 <aside class="warning"><p>If the application in the container requires a certain version of the CUDA toolkit, the application will work unless your machine&#39;s driver version is too old to support that version of the CUDA toolkit. [<a href="https://docs.nvidia.com/deploy/cuda-compatibility/index.html#binary-compatibility__table-toolkit-driver" target="_blank"><strong>More Information</strong></a>]</p>
 </aside>
-<h2>Downloading and installing <strong><code>nvidia-docker</code></strong></h2>
+<h2 is-upgraded>Downloading and installing <strong><code>nvidia-docker</code></strong></h2>
 <p>In this step, you will be downloading and installing the NVIDIA Container Runtime. Please run the following commands in Terminal, and again note that every command is one line.</p>
 <pre># adding the repository
 
@@ -203,7 +205,7 @@ sudo apt-get install nvidia-docker2
 
 # restart the docker daemon
 sudo pkill -SIGHUP dockerd</pre>
-<h2>Verifying <code>nvidia-docker</code><strong> is installed correctly</strong></h2>
+<h2 is-upgraded>Verifying <code>nvidia-docker</code><strong> is installed correctly</strong></h2>
 <p>To verify that <strong><code>nvidia-docker</code></strong> is installed correctly, you can run the following command to execute <strong><code>nvidia-smi</code></strong> <strong>inside</strong> a docker container.</p>
 <pre>nvidia-docker run --rm nvidia/cuda nvidia-smi
 
@@ -211,10 +213,10 @@ sudo pkill -SIGHUP dockerd</pre>
 docker run --runtime=nvidia --rm nvidia/cuda nvidia-smi</pre>
 <p>Since you probably don&#39;t have the <a href="https://hub.docker.com/r/nvidia/cuda/" target="_blank"><strong><code>nvidia/cuda</code></strong></a> image on your system, Docker will go ahead and pull it from the Docker Hub before running it.</p>
 <p>If you see the <strong><code>nvidia-smi</code></strong> output, then your installation is working:</p>
-<p><img style="width: 624.00px" src="img/ea141ca2c79cf244.png"></p>
+<p class="image-container"><img style="width: 624.00px" src="img/ea141ca2c79cf244.png"></p>
 <aside class="special"><p>Notice how, in contrast to when running <strong><code>nvidia-smi</code></strong> on the host system, no processes show up. This is because <strong><code>nvidia-smi</code></strong> is running inside the container, which is isolated and has tightly controlled visibility of the host system. This is what we call container isolation.</p>
 </aside>
-<h2 class="checklist"><strong>What we&#39;ve covered</strong></h2>
+<h2 class="checklist" is-upgraded><strong>What we&#39;ve covered</strong></h2>
 <ul class="checklist">
 <li>How to install NVIDIA drivers and CUDA on a Linux system</li>
 <li>How to install Docker and the NVIDIA Container Runtime (<strong><code>nvidia-docker</code></strong>)</li>
@@ -236,7 +238,7 @@ docker run --runtime=nvidia --rm nvidia/cuda nvidia-smi</pre>
 <li>VNC edition with full desktop environment and various RL libraries</li>
 </ul>
 <p>All these functionalities can be access through a web browser.</p>
-<h2><strong>Installing the AI Lab GUI</strong></h2>
+<h2 is-upgraded><strong>Installing the AI Lab GUI</strong></h2>
 <p><strong>AI Lab GUI</strong> is a simple Python application that runs on your workstation or server. It allows you to easily start, stop, and launch Jupyter notebook via a simple web interface. This means that you can use the container without needing to manually type in docker commands. You can also use it remotely to manage the container if you do not have SSH access to your system.</p>
 <p>Installing and using the <strong>AI Lab GUI</strong> is recommended for beginners who may not be experienced with docker or the command line interface.</p>
 <p>If you&#39;ve come to this guide from the Web Dashboard, then you&#39;ve already installed the <strong>AI Lab GUI</strong> package. If not, you are encouraged to install the <strong>AI Lab GUI</strong> package:</p>
@@ -244,11 +246,11 @@ docker run --runtime=nvidia --rm nvidia/cuda nvidia-smi</pre>
 sudo apt install python3 python3-pip
 
 pip install ai_lab_gui</pre>
-<h2><strong>Using the AI Lab GUI</strong></h2>
+<h2 is-upgraded><strong>Using the AI Lab GUI</strong></h2>
 <p>Running <strong>AI Lab GUI</strong> is simple:</p>
 <pre>ai_lab_gui</pre>
 <p>By running the above command on your system, the Web Dashboard will start on port <strong><code>5050</code></strong> and open in a browser. </p>
-<p><img style="width: 624.00px" src="img/f2b4208457a55394.png"></p>
+<p class="image-container"><img style="width: 624.00px" src="img/f2b4208457a55394.png"></p>
 <p>If you&#39;re running the command on a remote server, find out what is the IP address of the server and navigate to <strong><code>ip-address:5050</code></strong> in your web browser to see the Web Dashboard.</p>
 <p>Here&#39;s a breakdown of the Web Dashboard</p>
 <p>(placeholder)</p>
@@ -260,7 +262,7 @@ pip install ai_lab_gui</pre>
     
       <google-codelab-step label="Running the AI Lab Container (Docker CLI)" duration="10">
         <p>Using the <strong>AI Lab GUI</strong> is convenient, but it is important to also learn the basics of launching containers from the command line using the <strong><code>docker</code></strong> command line interface (CLI).</p>
-<h2><strong>Basic Commands</strong></h2>
+<h2 is-upgraded><strong>Basic Commands</strong></h2>
 <p>Pulling a container:</p>
 <pre>docker pull nvaitc/ai-lab:latest</pre>
 <p>Running an interactive shell inside the container:</p>
@@ -280,7 +282,7 @@ pip install ai_lab_gui</pre>
 <p>Sometimes, we do this to make complicated commands look neater.</p>
 </aside>
 <p>For detailed instructions on how to use AI Lab via the docker CLI, please head over to the <a href="https://github.com/NVAITC/ai-lab/blob/master/INSTRUCTIONS.md" target="_blank"><strong>Instructions page</strong></a> on the GitHub repository.</p>
-<h2 class="checklist"><strong>What we&#39;ve covered</strong></h2>
+<h2 class="checklist" is-upgraded><strong>What we&#39;ve covered</strong></h2>
 <ul class="checklist">
 <li>How to install NVIDIA drivers and CUDA on a Linux system</li>
 <li>How to install Docker and the NVIDIA Container Runtime (<strong><code>nvidia-docker</code></strong>)</li>
@@ -297,34 +299,7 @@ pip install ai_lab_gui</pre>
 <p>There is the original <a href="https://keras.io/" target="_blank"><strong>Keras library</strong></a>, which can operate on top of various deep learning frameworks (&#34;backends&#34;) including TensorFlow, MXNet and CNTK.</p>
 <p>For this tutorial, we will use the <strong>TensorFlow</strong> built in implementation of Keras (<a href="https://www.tensorflow.org/guide/keras" target="_blank"><strong>tf.keras</strong></a>).</p>
 </aside>
-<p>(placeholder)</p>
-
-
-      </google-codelab-step>
-    
-      <google-codelab-step label="Running the Oxford102 example in AI Lab" duration="40">
-        <h2><strong>Downloading the Dataset</strong></h2>
-<p>(placeholder)</p>
-<h2><strong>Mounting the project folder into the AI Lab container</strong></h2>
-<p>(placeholder)</p>
-<h2><strong>Running the Training Job on a single GPU</strong></h2>
-<p>(placeholder)</p>
-<aside class="warning"><p>If you are using a shared server with multiple GPU, you do not want to accidentally use multiple GPUs. TensorFlow, for example, has a tendency to occupy the GPU memory of all the available GPUs on a given system. To avoid that, we can set <strong>at the very top of the notebook</strong>, in the first code cell to be executed:</p>
-<p><code>import os</code></p>
-<p><code>os.environ[&#34;CUDA_DEVICE_ORDER&#34;] = &#34;PCI_BUS_ID&#34;</code></p>
-<p><code># set the desired GPU ID as seen in nvidia-smi</code></p>
-<p><code>os.environ[&#34;CUDA_VISIBLE_DEVICES&#34;] = &#34;0&#34; # first GPU on the system</code></p>
-</aside>
-<p>(placeholder)</p>
-<aside class="special"><p><strong>Important Note</strong></p>
-<p>In this example, we are using transfer learning, a technique to retrain a neural network without needing to train it from scratch, or even training all the layers. This is a common technique used for convolutional neural networks (CNN) in image classification and other related tasks.</p>
-</aside>
-<p>(placeholder)</p>
-<h2><strong>Running the Training Job on multiple GPUs</strong></h2>
-<p>If your system does not have multiple GPUs, you can skip pass this step.</p>
-<p>(placeholder)</p>
-<p>(placeholder)</p>
-<h2 class="checklist"><strong>What we&#39;ve covered</strong></h2>
+<h2 class="checklist" is-upgraded><strong>What we&#39;ve covered</strong></h2>
 <ul class="checklist">
 <li>How to install NVIDIA drivers and CUDA on a Linux system</li>
 <li>How to install Docker and the NVIDIA Container Runtime (<strong><code>nvidia-docker</code></strong>)</li>

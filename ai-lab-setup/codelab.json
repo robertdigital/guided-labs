@@ -1,15 +1,15 @@
 {
   "environment": "web",
-  "source": "1IHU_WxW7fXSsYr5QihmggHaGeZtsq9iteXx-6UhwVxI",
   "format": "html",
   "prefix": "https://storage.googleapis.com",
   "mainga": "UA-49880327-14",
-  "updated": "2019-04-08T04:14:38Z",
+  "updated": "2019-07-01T16:29:00Z",
   "id": "ai-lab-setup",
-  "duration": 155,
+  "duration": 115,
   "title": "AI Lab Guided Setup",
-  "author": "tlkh",
+  "authors": "tlkh",
   "summary": "Through this guided lab, you set up your own personal AI development environment. You will install the NVIDIA drivers, CUDA toolkit, as well as Docker and the NVIDIA Container Runtime (nvidia-docker), and then pull the nvaitc/ai-lab container and get started with some basic Deep Learning tasks.",
+  "source": "1IHU_WxW7fXSsYr5QihmggHaGeZtsq9iteXx-6UhwVxI",
   "theme": "setup",
   "status": [
     "draft"
